@@ -3,7 +3,11 @@ SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-  - Type: Push
+  - Type: PULLREQUEST
+    Branches:
+      - main
+    Events:
+      - REVISION
 Actions:
   Build_d0:
     # Identifies the action. Do not modify this value.
