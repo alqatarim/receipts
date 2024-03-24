@@ -1,0 +1,40 @@
+
+{
+	"version": "2.0.0",
+	"tasks": [
+	  {
+		"label": "Run Node Server",
+		"type": "shell",
+		"command": "node",
+		"args": ["node-backend/server.js"],
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		},
+		"presentation": {
+		  "reveal": "always",
+		  "panel": "dedicated"
+		},
+		"options": {
+		  "cwd": "${workspaceFolder}"
+		}
+	  },
+	  {
+		"label": "Start NPM",
+		"type": "shell",
+		"command": "npm",
+		"args": ["start"],
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		},
+		"presentation": {
+		  "reveal": "always",
+		  "panel": "dedicated"
+		},
+		"options": {
+		  "cwd": "${workspaceFolder}/Receipts"
+		}
+	  }
+	]
+  }
