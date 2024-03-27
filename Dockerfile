@@ -1,20 +1,19 @@
-# Use the latest LTS version of Node.js as the base image
-FROM node:20
+FROM node:21-slim
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code to the working directory
+# Copy application code
 COPY . .
 
-# Expose port 3000 (or any other port your application listens to)
+# Expose port
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npm", "start"]
+CMD ["node", "app.js"]

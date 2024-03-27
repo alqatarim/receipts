@@ -1,0 +1,15 @@
+{
+    "featuredatabase": {
+      "host": "localhost",
+      "port": 5432,
+      "username": "admin",
+      "password": "password",
+      "database": "my_database"
+    },
+    "featureapi": {
+      "key": "your_api_key_here"
+    },
+    "featureFlags": {
+      "newFeatureEnabled": true
+    }
+  }
