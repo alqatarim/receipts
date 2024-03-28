@@ -6,7 +6,7 @@
 		"label": "Run Node Server",
 		"type": "shell",
 		"command": "node",
-		"args": ["node-backend/server.js"],
+		"args": ["server.js"],
 		"group": {
 		  "kind": "build",
 		  "isDefault": true
@@ -20,10 +20,11 @@
 		}
 	  },
 	  {
-		"label": "Start NPM",
+		"label": "npm start",
 		"type": "shell",
 		"command": "npm",
 		"args": ["start"],
+
 		"group": {
 		  "kind": "build",
 		  "isDefault": true
@@ -33,7 +34,7 @@
 		  "panel": "dedicated"
 		},
 		"options": {
-		  "cwd": "${workspaceFolder}/Receipts"
+		  "cwd": "${workspaceFolder}/react-frontend"
 		}
 	  }
 	]
