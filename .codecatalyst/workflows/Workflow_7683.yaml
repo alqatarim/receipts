@@ -9,7 +9,7 @@ Triggers:
     Events:
       - REVISION
 Actions:
-  Build_d0:
+  Build:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
     # Specifies the source and/or artifacts to pass to the action as input.
@@ -20,17 +20,96 @@ Actions:
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
-        Enabled: true
+        Enabled: false
         # Use as prefix for the report files
         ReportNamePrefix: rpt
+      Artifacts:
+        - Name: Copilot
+          Files:
+            - ./out/*
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
       Steps:
-        - Run: echo "Hello, World!"
-        - Run: echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" >> report.xml
-        - Run: echo "<testsuite tests=\"1\" name=\"TestAgentJunit\" >" >> report.xml
-        - Run: echo "<testcase classname=\"TestAgentJunit\" name=\"Dummy
-            Test\"/></testsuite>" >> report.xml
+        - Run: export AWS_REGION=eu-central-1
+        - Run: wget -q https://ecs-cli-v2-release.s3.amazonaws.com/copilot-linux-v1.26.0
+        - Run: mv ./copilot-linux-v1.26.0 ./copilot-linux
+        - Run: chmod +x ./copilot-linux
+        - Run: ./copilot-linux app init receipts || true
+        - Run: ./copilot-linux env init --name test --profile default --default-config ||
+            true
+        - Run: ./copilot-linux env deploy --name test || true
+        - Run: ./copilot-linux svc init --name helloworldapi || true
+        - Run: ./copilot-linux svc package --env test --name helloworldapi --output-dir
+            out --upload-assets
+      Container:
+        Registry: CODECATALYST
+        Image: CodeCatalystLinux_x86_64:2024_03
     Compute:
       Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystDevRole
+          Name: "692889134364"
+      Name: test
+  Deploy:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cfn-deploy@v1.0.5
+    # Defines the action's properties.
+    Configuration:
+      tags: '[{"Key":"copilot-application","Value":"receipts"},{"Key":"copilot-application","Value":"test"},{"Key":"copilot-service","Value":"test"}]'
+      parameter-overrides: file:///artifacts/Deploy/Copilot/out/helloworldapi-test.params.json
+      role-arn: arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole
+      template: /artifacts/Deploy/Copilot/out/receiptshelloworldapi-test.stack.yml
+      region: me-south-1
+      name: receipts-stack
+    Environment:
+      Connections:
+        - Role: CodeCatalystDevRole
+          Name: "692889134364"
+      Name: test
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - Copilot
+      Sources: []
+  GetEndpointURL:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    Outputs:
+      # Optional; Automatically discover reports for popular test frameworks
+      AutoDiscoverReports:
+        Enabled: false
+        # Use as prefix for the report files
+        ReportNamePrefix: rpt
+      Variables:
+        - URL
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: export AWS_REGION=eu-central-1
+        - Run: wget -q https://ecs-cli-v2-release.s3.amazonaws.com/copilot-linux-v1.26.0
+        - Run: mv ./copilot-linux-v1.26.0 ./copilot-linux
+        - Run: chmod +x ./copilot-linux
+        - Run: export URL=$( jq -r '.routes[].url' <<< "$( ./copilot-linux svc show
+            --json)" )
+      Container:
+        Registry: CODECATALYST
+        Image: CodeCatalystLinux_x86_64:2024_03
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    DependsOn:
+      - Deploy
+    Environment:
+      Connections:
+        - Role: CodeCatalystDevRole
+          Name: "692889134364"
+      Name: test
