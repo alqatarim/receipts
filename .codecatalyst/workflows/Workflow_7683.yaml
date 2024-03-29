@@ -36,6 +36,7 @@ Actions:
     Configuration:
       RegistryId: "692889134364"
       RepositoryName: receipts-ecr-repo
+      AWSRegion: me-south-1
       ImageTag: "0.3"
       PublicRepository: false
       ImageScanningConfiguration: false
