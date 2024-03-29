@@ -34,7 +34,8 @@ Actions:
     Compute:
       Type: EC2 # Defines the action's properties.
     Configuration:
-      RepositoryName: Receipts
-      ImageTag: v1
+      RegistryId: "692889134364"
+      RepositoryName: receipts-ecr-repo
+      ImageTag: "0.3"
       PublicRepository: false
       ImageScanningConfiguration: false
