@@ -37,6 +37,7 @@ Actions:
         - Run: cd ../react-frontend
         - Run: echo running npm run build ...
         - Run: npm run build
+        - Run: cd ../
         - Run: echo Logging in to Docker...
         - Run: aws ecr get-login-password --region me-south-1 | docker login --username
             AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
