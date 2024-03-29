@@ -15,7 +15,7 @@ Actions:
     Configuration:
       image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
       container-name: Receipts-Container1-Deploy
-      task-definition: taskdef.json
+      task-definition: ./taskdef.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
