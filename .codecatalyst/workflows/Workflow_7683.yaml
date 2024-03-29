@@ -17,7 +17,7 @@ Actions:
         # Use as prefix for the report files
         ReportNamePrefix: rpt
       Artifacts:
-        - Name: newOutput
+        - Name: SourceGithub
           Files:
             - "**/*"
     # Defines the action's properties.
@@ -38,17 +38,17 @@ Actions:
         - Run: echo running npm run build ...
         - Run: npm run build
         - Run: echo Logging in to Docker...
-        - Run: aws ecr get-login-password --region me-south-1 | docker login --username AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
+        - Run: aws ecr get-login-password --region me-south-1 | docker login --username
+            AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
         - Run: echo Building Docker Image ...
-    #   - Run: docker build -t ReceiptsDockerImg:${WorkflowSource.CommitId} .
+        #   - Run: docker build -t ReceiptsDockerImg:${WorkflowSource.CommitId} .
         - Run: docker build -t $REPOSITORY_URI:latest .
         - Run: echo Docker Tagging Images ...
         - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
         - Run: docker push $REPOSITORY_URI:latest
-     #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
+        #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
-
       Container:
         Registry: CODECATALYST
         Image: CodeCatalystLinux_x86_64:2024_03
@@ -77,15 +77,15 @@ Actions:
       Fleet: Linux.x86-64.Large
     Outputs:
       Artifacts:
-        - Name: newTaskDefenition
+        - Name: TaskDefArtifact
           Files:
-            - "**/*"
+            - "task-definition*"
+      Variables:
+        - task-definition
     DependsOn:
       - BuildDocker
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
-      Artifacts:
-        - newOutput
       Sources: []
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
@@ -106,5 +106,5 @@ Actions:
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
       Artifacts:
-        - newTaskDefenition
+        - TaskDefArtifact
       Sources: []
