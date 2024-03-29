@@ -9,34 +9,49 @@ Triggers:
     Events:
       - REVISION
 Actions:
-  PushToAmazonECR_58:
+  Build_e1:
     # Identifies the action. Do not modify this value.
-    Identifier: codecatalyst-labs/push-to-ecr@v1.0.3
+    Identifier: aws/build@v1.0.0
+    Inputs:
+      Sources:
+        - WorkflowSource
     Outputs:
+      # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
         Enabled: true
+        # Use as prefix for the report files
         ReportNamePrefix: rpt
       Artifacts:
-        - Name: BuildOutput
+        - Name: newOutput
           Files:
             - "**/*"
-    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: echo installing npm ...
+        - Run: npm install
+        - Run: echo Navigating to node-backend directory ...
+        - Run: cd node-backend
+        - Run: echo installing npm ...
+        - Run: npm install
+        - Run: echo Navigating to react-frontend directory ...
+        - Run: cd ../react-frontend
+        - Run: echo installing npm ...
+        - Run: npm install
+        - Run: cd ../react-frontend
+        - Run: echo running npm run build ...
+        - Run: npm run build
+        - Run: echo Navigating back to the Project Root directory ...
+        - Run: cd
+      Container:
+        Registry: CODECATALYST
+        Image: CodeCatalystLinux_x86_64:2024_03
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
     Environment:
       Connections:
         - Role: CodeCatalystDevRole
           Name: "692889134364"
       Name: test
-    # Specifies the source and/or artifacts to pass to the action as input.
-    Inputs:
-      # Optional
-      Sources:
-        - WorkflowSource # This specifies that the action requires this Workflow as a source
-    Compute:
-      Type: EC2 # Defines the action's properties.
-    Configuration:
-      RegistryId: "692889134364"
-      RepositoryName: receipts-ecr-repo
-      AWSRegion: me-south-1
-      ImageTag: "0.3"
-      PublicRepository: false
-      ImageScanningConfiguration: false
