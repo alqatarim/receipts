@@ -1,4 +1,5 @@
 {
+    
     "taskDefinitionArn": "arn:aws:ecs:me-south-1:692889134364:task-definition/Receipts-task1-Deploy:1",
     "containerDefinitions": [
         {
