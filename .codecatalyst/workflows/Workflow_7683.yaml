@@ -41,8 +41,8 @@ Actions:
         - Run: aws ecr get-login-password --region me-south-1 | docker login --username
             AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
         - Run: echo Building Docker Image ...
-        #   - Run: docker build -t ReceiptsDockerImg:${WorkflowSource.CommitId} .
-        - Run: docker build -t $REPOSITORY_URI:latest .
+        - Run: docker build -t receipts:${WorkflowSource.CommitId} .
+        # - Run: docker build -t $REPOSITORY_URI:latest .
         - Run: echo Docker Tagging Images ...
         - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
