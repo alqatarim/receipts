@@ -12,11 +12,6 @@ Actions:
   Build:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
-    # Specifies the source and/or artifacts to pass to the action as input.
-    Inputs:
-      # Optional
-      Sources:
-        - WorkflowSource # This specifies that the action requires this Workflow as a source
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
@@ -24,9 +19,9 @@ Actions:
         # Use as prefix for the report files
         ReportNamePrefix: rpt
       Artifacts:
-        - Name: Copilot
+        - Name: SourceArtifact
           Files:
-            - ./out/*
+            - "**/*"
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
@@ -53,15 +48,18 @@ Actions:
         - Role: CodeCatalystDevRole
           Name: "692889134364"
       Name: test
+    Inputs:
+      Sources:
+        - WorkflowSource
   Deploy:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cfn-deploy@v1.0.5
     # Defines the action's properties.
     Configuration:
       tags: '[{"Key":"copilot-application","Value":"receipts"},{"Key":"copilot-application","Value":"test"},{"Key":"copilot-service","Value":"test"}]'
-      parameter-overrides: file:///artifacts/Deploy/Copilot/out/helloworldapi-test.params.json
+      parameter-overrides: file:///artifacts/Deploy/Copilot/out/receipts-test.params.json
       role-arn: arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole
-      template: /artifacts/Deploy/Copilot/out/receiptshelloworldapi-test.stack.yml
+      template: /artifacts/Deploy/Copilot/out/receipts-test.stack.yml
       region: me-south-1
       name: receipts-stack
     Environment:
@@ -69,10 +67,12 @@ Actions:
         - Role: CodeCatalystDevRole
           Name: "692889134364"
       Name: test
+    DependsOn:
+      - Build
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
       Artifacts:
-        - Copilot
+        - SourceArtifact
       Sources: []
   GetEndpointURL:
     # Identifies the action. Do not modify this value.
@@ -113,3 +113,35 @@ Actions:
         - Role: CodeCatalystDevRole
           Name: "692889134364"
       Name: test
+  DeployToAmazonECS_5e:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/ecs-deploy@v1.0.5
+
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Name:
+      Connections:
+        - Name:
+          Role:
+
+            # Defines the action's properties.
+    Configuration:
+      # Required; type: string; description: The name of the ECS services cluster.  Will default to the default cluster
+      cluster:
+
+      # Required; type: string; description: The path to the ECS task definition file to register
+      task-definition:
+
+      # Required; type: string; description: The name of the ECS service to deploy to. The action will only register the task definition if no service is given.
+      service:
+
+      # Required; type: string; description: The AWS region name
+      region:
+
+
