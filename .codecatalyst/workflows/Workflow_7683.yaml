@@ -9,41 +9,32 @@ Triggers:
     Events:
       - REVISION
 Actions:
-  BuildAndPushDockerImages_98:
+  PushToAmazonECR_58:
     # Identifies the action. Do not modify this value.
-    Identifier: aws/github-actions-runner@v1.0.0
-    Inputs:
-      Sources:
-        - WorkflowSource
-    # Defines the action's properties.
-    Configuration:
-      # Be aware that a new version of the action could be available on GitHub.
-      Steps:
-        - uses: docker/build-push-action@v4.1.1
-        - "Run:": echo installing Node ...
-        - "Run:": npm install node 20.0.0
-        - "Run:": echo installing npm ...
-        - "Run:": npm install
-        - "Run:": echo Navigating to node-backend directory ...
-        - "Run:": cd node-backend
-        - "Run:": echo installing npm ...
-        - "Run:": npm install
-        - "Run:": echo Navigating to react-frontend directory ...
-        - "Run:": cd ../react-frontend
-        - "Run:": echo installing npm ...
-        - "Run:": npm install
-        - "Run:": echo running npm run build ...
-        - "Run:": npm run build
-        - "Run:": echo Navigating back to the Project Root directory ...
-        - "Run:": cd ..
-        - "Run:": echo Building Docker Image ...
-        - "Run:": docker build -t receipts-image:0.1 -f Dockerfile .
-        - "Run:": echo Tagging Docker Image ...
-    Compute:
-      Type: EC2
-      Fleet: Linux.x86-64.Large
+    Identifier: codecatalyst-labs/push-to-ecr@v1.0.3
+    Outputs:
+      AutoDiscoverReports:
+        Enabled: true
+        ReportNamePrefix: rpt
+      Artifacts:
+        - Name: BuildOutput
+          Files:
+            - "**/*"
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
         - Role: CodeCatalystDevRole
           Name: "692889134364"
       Name: test
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    Compute:
+      Type: EC2 # Defines the action's properties.
+    Configuration:
+      RepositoryName: Receipts
+      ImageTag: v1
+      PublicRepository: false
+      ImageScanningConfiguration: false
