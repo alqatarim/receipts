@@ -55,3 +55,47 @@ Actions:
         - Role: CodeCatalystDevRole
           Name: "692889134364"
       Name: test
+  RenderAmazonECSTaskDefinition_5c:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/ecs-render-task-definition@v1.0.4
+    # Defines the action's properties.
+    Configuration:
+      image: ReceiptsLate
+      container-name: receipts-container1-deploy
+      task-definition: arn:aws:ecs:me-south-1:692889134364:task-definition/Receipts-task1-Deploy:1
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Outputs:
+      Artifacts:
+        - Name: newTaskDefenition
+          Files:
+            - "**/*"
+    DependsOn:
+      - Build_e1
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - newOutput
+      Sources: []
+  DeployToAmazonECS_4c:
+    Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
+    Configuration:
+      force-new-deployment: "1"
+      task-definition: newTaskDefenition
+      service: Receipts-US-East-Cluster-Service1
+      cluster: Receipts-US-East-1-Cluster
+      region: us-east-1
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystDevRole
+          Name: "692889134364"
+      Name: test
+    DependsOn:
+      - RenderAmazonECSTaskDefinition_5c
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - newTaskDefenition
+      Sources: []
