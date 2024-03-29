@@ -26,17 +26,37 @@ Actions:
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
       Steps:
-        - Run: export AWS_REGION=eu-central-1
-        - Run: wget -q https://ecs-cli-v2-release.s3.amazonaws.com/copilot-linux-v1.26.0
-        - Run: mv ./copilot-linux-v1.26.0 ./copilot-linux
-        - Run: chmod +x ./copilot-linux
-        - Run: ./copilot-linux app init receipts || true
-        - Run: ./copilot-linux env init --name test --profile default --default-config ||
-            true
-        - Run: ./copilot-linux env deploy --name test || true
-        - Run: ./copilot-linux svc init --name helloworldapi || true
-        - Run: ./copilot-linux svc package --env test --name helloworldapi --output-dir
-            out --upload-assets
+        - Run: echo installing Node ...
+        - Run: npm install node 20.0.0
+        - Run: echo installing npm ...
+        - Run: npm install
+        - Run: echo Navigating to node-backend directory ...
+        - Run: cd node-backend
+        - Run: echo installing npm ...
+        - Run: npm install
+        - Run: echo Navigating to react-frontend directory ...
+        - Run: cd ../react-frontend
+        - Run: echo installing npm ...
+        - Run: npm install
+        - Run: echo Logging into Amazon ECR ...
+        - Run: aws ecr get-login-password --region me-south-1 | docker login --username
+            AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
+        - Run: echo running npm run build ...
+        - Run: npm run build
+        - Run: echo Building Docker image...
+        - Run: echo $(pwd)
+        - Run: echo Navigating back to the Project Root directory ...
+        - Run: cd ..
+        - Run: echo Building Docker Image ...
+        - Run: docker build -t receipts-ecr-repo:0.2 -f Dockerfile .
+        - Run: echo Tagging Docker Image ...
+        - Run: docker tag receipts-ecr-repo:0.2
+            692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
+        - Run: echo Pushing Docker image to Amazon ECR...
+        - Run: docker push
+            692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
+        - Run: echo Navigate back to the root directory
+        - Run: cd ..
       Container:
         Registry: CODECATALYST
         Image: CodeCatalystLinux_x86_64:2024_03
