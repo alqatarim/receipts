@@ -42,15 +42,17 @@ Actions:
         - Run: aws ecr get-login-password --region me-south-1 | docker login --username
             AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
         - Run: echo Building Docker Image ...
-    #   - Run: docker build -t receipts:${WorkflowSource.CommitId} .
+        #   - Run: docker build -t receipts:${WorkflowSource.CommitId} .
         - Run: docker build -t receipts-ecr-repo:0.2 -f Dockerfile .
-      # - Run: docker build -t $REPOSITORY_URI:latest .
+        # - Run: docker build -t $REPOSITORY_URI:latest .
         - Run: echo Docker Tagging Images ...
-        - Run: docker tag receipts-ecr-repo:0.2 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
-    #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+        - Run: docker tag receipts-ecr-repo:0.2
+            692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
+        #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
-        - Run: docker push 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
-   #    - Run: docker push $REPOSITORY_URI:latest
+        - Run: docker push
+            692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
+        #    - Run: docker push $REPOSITORY_URI:latest
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -74,8 +76,8 @@ Actions:
     # Defines the action's properties.
     Configuration:
       image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
-      container-name: receipts-container1-deploy
-      task-definition: arn:aws:ecs:me-south-1:692889134364:task-definition/Receipts-task1-Deploy:1
+      container-name: Receipts-Container1-Deploy
+      task-definition: taskdef.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
@@ -83,9 +85,7 @@ Actions:
       Artifacts:
         - Name: TaskDefArtifact
           Files:
-            - "task-definition*"
-      Variables:
-        - task-definition
+            - task-definition*
     DependsOn:
       - BuildDocker
     # Specifies the source and/or artifacts to pass to the action as input.
