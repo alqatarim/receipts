@@ -3,13 +3,11 @@ SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-  - Type: PULLREQUEST
+  - Type: PUSH
     Branches:
       - main
-    Events:
-      - REVISION
 Actions:
-  Build_e1:
+  BuildDocker:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
     Inputs:
@@ -72,7 +70,7 @@ Actions:
           Files:
             - "**/*"
     DependsOn:
-      - Build_e1
+      - BuildDocker
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
       Artifacts:
