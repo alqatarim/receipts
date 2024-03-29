@@ -49,7 +49,7 @@ Actions:
         - Run: docker tag receipts-ecr-repo:0.2 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
     #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
-        - Run: docker push 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
+        - Run: docker push 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
    #    - Run: docker push $REPOSITORY_URI:latest
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
