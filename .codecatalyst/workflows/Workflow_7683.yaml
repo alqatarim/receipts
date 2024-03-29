@@ -10,9 +10,6 @@ Actions:
   BuildDocker:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
-    Inputs:
-      Sources:
-        - WorkflowSource
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
@@ -40,8 +37,18 @@ Actions:
         - Run: cd ../react-frontend
         - Run: echo running npm run build ...
         - Run: npm run build
-        - Run: echo Navigating back to the Project Root directory ...
-        - Run: cd
+        - Run: echo Logging in to Docker...
+        - Run: aws ecr get-login-password --region me-south-1 | docker login --username AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
+        - Run: echo Building Docker Image ...
+    #   - Run: docker build -t ReceiptsDockerImg:${WorkflowSource.CommitId} .
+        - Run: docker build -t $REPOSITORY_URI:latest .
+        - Run: echo Docker Tagging Images ...
+        - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+        - Run: echo Docker pushing Image ...
+        - Run: docker push $REPOSITORY_URI:latest
+     #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
+        - Run: echo DONE BUILD YAAAY!! ...
+
       Container:
         Registry: CODECATALYST
         Image: CodeCatalystLinux_x86_64:2024_03
@@ -53,12 +60,16 @@ Actions:
         - Role: CodeCatalystDevRole
           Name: "692889134364"
       Name: test
+    Inputs:
+      Sources:
+        - WorkflowSource
+
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: ReceiptsImage
+      image: ReceiptsImage:${WorkflowSource.CommitId}
       container-name: receipts-container1-deploy
       task-definition: arn:aws:ecs:me-south-1:692889134364:task-definition/Receipts-task1-Deploy:1
     Compute:
