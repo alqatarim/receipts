@@ -44,7 +44,8 @@ Actions:
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
         - Run: echo Logging in to ECR...
-      #  - Run: docker build . \ --cache-from /docker/cache \ --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} \ ---t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        - Run: docker build t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        #  - Run: docker build . \ --cache-from /docker/cache \ --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} \ ---t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         - Run: docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -89,10 +90,10 @@ Actions:
     Caching:
       FileCaching:
         DockerLayersCache:
-    #      RestoreKeys:
-   #         -  docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
+          #         -  docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
           Path: /docker/cache
-  
+        BuildCache:
+          Path: /buildCache
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
