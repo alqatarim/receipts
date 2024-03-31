@@ -111,7 +111,7 @@ Actions:
       Artifacts:
         - Name: TaskDefArtifact
           Files:
-            - task-definitionn*
+            - task-definition*
     DependsOn:
       - BuildDocker
     # Specifies the source and/or artifacts to pass to the action as input.
