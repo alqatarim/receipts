@@ -54,6 +54,7 @@ Actions:
         - Run: echo Docker pushing Image ...
         - Run: docker push
             692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
+        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition > taskdefinition.json
         - Run: echo "::set-output
             name=image::692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest"
         #    - Run: docker push $REPOSITORY_URI:latest
@@ -89,7 +90,7 @@ Actions:
       Artifacts:
         - Name: TaskDefArtifact
           Files:
-            - task-definition*
+            - task-definitionn*
     DependsOn:
       - BuildDocker
     # Specifies the source and/or artifacts to pass to the action as input.
