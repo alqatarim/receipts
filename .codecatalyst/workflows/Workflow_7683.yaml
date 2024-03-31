@@ -21,12 +21,6 @@ Actions:
         - Name: SourceGithub
           Files:
             - "**/*"
-    Caching:
-      FileCaching:
-        DockerLayersCache:
-          Path: /docker/cache
-          RestoreKeys:
-          - docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
@@ -94,8 +88,14 @@ Actions:
           Value: task-definition.json
         - Name: CONTAINER_NAME
           Value: Receipts-Container1-Deploy
+    Caching:
+      FileCaching:
+        DockerLayersCache:
+          RestoreKeys:
+            - docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
+          Path: /docker/cache
+  
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
-
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
     Identifier: aws/ecs-render-task-definition@v1.0.4
