@@ -44,18 +44,19 @@ Actions:
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
         - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-        - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        
-    #    - Run: docker tag appimage ${registry}/${image}:${WorkflowSource.CommitId}
-    #    - Run: docker push --all-tags ${registry}/${image}
-    #    - Run: export IMAGE=${registry}/${image}:${WorkflowSource.CommitId}
-        
-        
-        
-        
+        - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG
+            $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+        #    - Run: docker tag appimage ${registry}/${image}:${WorkflowSource.CommitId}
+        #    - Run: docker push --all-tags ${registry}/${image}
+        #    - Run: export IMAGE=${registry}/${image}:${WorkflowSource.CommitId}
+
+
+
+
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-    #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Querying Task Definition ..
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
@@ -109,7 +110,7 @@ Actions:
     Configuration:
       image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
       container-name: Receipts-Container1-Deploy
-      task-definition: task-definition.json
+      task-definition: Receipts-task1-Deploy.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
