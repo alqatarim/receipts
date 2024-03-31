@@ -44,11 +44,10 @@ Actions:
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
         - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-        #- Run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        #  - Run: docker build . \ --cache-from /docker/cache \ --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} \ ---t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-     #   - Run: docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        #   - Run: docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
-        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        - Run: docker push $ECR_REPOSITORY:$IMAGE_TAG
+        #    - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Querying Task Definition ..
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
@@ -78,7 +77,7 @@ Actions:
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
-          Value: "0.4"
+          Value: "0.5"
         - Name: ECS_SERVICE
           Value: Receipts-Cluster-Service2-Deployment
         - Name: ECS_CLUSTER
