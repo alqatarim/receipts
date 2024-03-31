@@ -39,7 +39,6 @@ Actions:
         - Run: echo running npm run build ...
         - Run: npm run build
         - Run: cd ../
-        #   - Run: docker build -t receipts-ecr-repo:0.3 -f Dockerfile .
         - Run: echo Logging in to ECR...
         - Run: aws ecr get-login-password --region $AWS_REGION | docker login --username
             AWS --password-stdin $ECR_REGISTRY
@@ -49,9 +48,8 @@ Actions:
         #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        #  - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > taskdefinition.json
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
-            --query taskDefinition
+        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > taskdefinition.json
+     #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
         - Run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
