@@ -49,8 +49,8 @@ Actions:
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > taskdefinition.json
-     #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
-        - Run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
+
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -90,7 +90,10 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: ${{ steps.BuildDocker.outputs.image }}
+      environment-variables: |-
+        ECS_TASK_DEFINITION=task-definition.json
+        CONTAINER_NAME=Receipts-Container1-Deploy
+      image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
       container-name: Receipts-Container1-Deploy
       task-definition: task-definition.json
     Compute:
