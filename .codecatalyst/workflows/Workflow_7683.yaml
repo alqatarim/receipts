@@ -21,6 +21,12 @@ Actions:
         - Name: SourceGithub
           Files:
             - "**/*"
+    Caching:
+      FileCaching:
+        DockerLayersCache:
+          Path: /docker/cache
+          RestoreKeys:
+            - docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
@@ -44,7 +50,10 @@ Actions:
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
         - Run: echo Logging in to ECR...
-        - Run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        - Run: docker build . \
+              --cache-from /docker/cache \
+              --build-arg BUILD_VERSION=${{ WorkflowSource.BUILD_VERSION }} \
+              ---t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
