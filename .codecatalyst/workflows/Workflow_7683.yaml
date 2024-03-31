@@ -39,24 +39,23 @@ Actions:
         - Run: echo running npm run build ...
         - Run: npm run build
         - Run: cd ../
-        - Run: echo Logging in to Docker...
-        - Run: aws ecr get-login-password --region me-south-1 | docker login --username
-            AWS --password-stdin 692889134364.dkr.ecr.me-south-1.amazonaws.com
+        - Run: echo Logging in to ECR...
+        - Run: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
-        #   - Run: docker build -t receipts:${WorkflowSource.CommitId} .
-        - Run: docker build -t receipts-ecr-repo:0.3 -f Dockerfile .
+    #   - Run: docker build -t receipts-ecr-repo:0.3 -f Dockerfile .
+        - Run: echo Logging in to ECR...
+        - Run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         # - Run: docker build -t $REPOSITORY_URI:latest .
-        - Run: echo Docker Tagging Images ...
-        - Run: docker tag receipts-ecr-repo:0.3
-            692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
+     #  - Run: echo Docker Tagging Images ...
+     #  - Run: docker tag receipts-ecr-repo:0.3 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
         #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
-        - Run: docker push
-            692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
-            --query taskDefinition > taskdefinition.json
+        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    #   - Run: docker push 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
+     #  - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > taskdefinition.json
+        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
         - Run: echo "::set-output
-            name=image::692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest"
+            name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -76,6 +75,8 @@ Actions:
       Variables:
         - Name: AWS_REGION
           Value: me-south-1
+        - Name: ECR_REGISTRY
+          Value: 692889134364.dkr.ecr.me-south-1.amazonaws.com
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: ECS_SERVICE
