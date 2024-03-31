@@ -46,14 +46,6 @@ Actions:
         - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
         - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG
             $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-        #    - Run: docker tag appimage ${registry}/${image}:${WorkflowSource.CommitId}
-        #    - Run: docker push --all-tags ${registry}/${image}
-        #    - Run: export IMAGE=${registry}/${image}:${WorkflowSource.CommitId}
-
-
-
-
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -61,7 +53,7 @@ Actions:
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
-        - Run: cat task-definition > task-definition.json
+        - Run: cat task-definition > $ECS_TASK_DEFINITION.json
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -92,7 +84,7 @@ Actions:
         - Name: ECS_CLUSTER
           Value: ReceiptsCluster
         - Name: ECS_TASK_DEFINITION
-          Value: task-definition.json
+          Value: Receipts-task1-Deploy.json
         - Name: CONTAINER_NAME
           Value: Receipts-Container1-Deploy
     Caching:
@@ -102,6 +94,7 @@ Actions:
           Path: /docker/cache
         BuildCache:
           Path: /buildCache
+        #    - Run: export IMAGE=${registry}/${image}:${WorkflowSource.CommitId}
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
