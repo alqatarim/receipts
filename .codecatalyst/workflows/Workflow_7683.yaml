@@ -72,7 +72,7 @@ Actions:
         - WorkflowSource
       Variables:
         - Name: AWS_REGION
-          Value: me-south-1
+          Value: us-east-1
         - Name: ECR_REGISTRY
           Value: 692889134364.dkr.ecr.$AWS_REGION.amazonaws.com
         - Name: ECR_REPOSITORY
@@ -94,7 +94,6 @@ Actions:
           Path: /docker/cache
         BuildCache:
           Path: /buildCache
-        #    - Run: export IMAGE=${registry}/${image}:${WorkflowSource.CommitId}
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
