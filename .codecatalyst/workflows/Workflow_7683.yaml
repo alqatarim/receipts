@@ -53,7 +53,7 @@ Actions:
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
-        - Run: cat task-definition > Receipts-task1-Deploy.json
+        - Run: cat task-definition > ECS_TASK_DEFINITION
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
