@@ -48,7 +48,10 @@ Actions:
         #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        - Run: echo Querying Task Definition ...
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > taskdefinition.json
+        - Run: echo Updating Task Definition ...
+        - Run: cat task-definition > taskdefinition.json
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
 
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
@@ -90,9 +93,6 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      environment-variables: |-
-        ECS_TASK_DEFINITION=task-definition.json
-        CONTAINER_NAME=Receipts-Container1-Deploy
       image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
       container-name: Receipts-Container1-Deploy
       task-definition: task-definition.json
@@ -108,6 +108,8 @@ Actions:
       - BuildDocker
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
+      Artifacts:
+        - SourceGithub
       Sources: []
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
