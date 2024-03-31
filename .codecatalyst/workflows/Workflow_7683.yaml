@@ -11,7 +11,6 @@ Actions:
   BuildDocker:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
-
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
@@ -54,10 +53,10 @@ Actions:
         - Run: echo Docker pushing Image ...
         - Run: docker push
             692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition > taskdefinition.json
+        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
+            --query taskDefinition > taskdefinition.json
         - Run: echo "::set-output
             name=image::692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest"
-        #    - Run: docker push $REPOSITORY_URI:latest
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -74,6 +73,19 @@ Actions:
     Inputs:
       Sources:
         - WorkflowSource
+      Variables:
+        - Name: AWS_REGION
+          Value: me-south-1
+        - Name: ECR_REPOSITORY
+          Value: receipts-ecr-repo
+        - Name: ECS_SERVICE
+          Value: Receipts-Cluster-Service2-Deployment
+        - Name: ECS_CLUSTER
+          Value: ReceiptsCluster
+        - Name: ECS_TASK_DEFINITION
+          Value: task-definition.json
+        - Name: CONTAINER_NAME
+          Value: Receipts-Container1-Deploy
 
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
