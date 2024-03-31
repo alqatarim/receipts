@@ -45,7 +45,7 @@ Actions:
         - Run: echo Building Docker Image ...
         - Run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         #  - Run: docker build . \ --cache-from /docker/cache \ --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} \ ---t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        - Run: docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
+        - Run: docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Querying Task Definition ..
