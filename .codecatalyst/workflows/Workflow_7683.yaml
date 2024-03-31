@@ -74,7 +74,7 @@ Actions:
         - Name: AWS_REGION
           Value: me-south-1
         - Name: ECR_REGISTRY
-          Value: 692889134364.dkr.ecr.me-south-1.amazonaws.com
+          Value: 692889134364.dkr.ecr.$AWS_REGION.amazonaws.com
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
@@ -126,7 +126,7 @@ Actions:
       task-definition: task-definition
       service: Receipts-US-East-Cluster-Service1
       cluster: Receipts-US-East-1-Cluster
-      region: us-east-1
+      region: $AWS_REGION
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
