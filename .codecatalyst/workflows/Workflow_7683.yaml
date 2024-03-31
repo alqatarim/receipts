@@ -46,8 +46,7 @@ Actions:
         - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
         #   - Run: docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
-        - Run: docker push $ECR_REPOSITORY:$IMAGE_TAG
-        #    - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Querying Task Definition ..
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
