@@ -44,8 +44,7 @@ Actions:
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
         - Run: echo Logging in to ECR...
-        - Run: docker build . \ --cache-from /docker/cache \ --build-arg BUILD_VERSION=${
-            WorkflowSource.BUILD_VERSION } \ ---t
+        - Run: docker build . \ --cache-from /docker/cache \ --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} \ ---t
             $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         #    - Run: docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo Docker pushing Image ...
