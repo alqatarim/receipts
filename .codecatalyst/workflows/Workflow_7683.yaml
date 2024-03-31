@@ -44,7 +44,7 @@ Actions:
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
         - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-        - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY
         
     #    - Run: docker tag appimage ${registry}/${image}:${WorkflowSource.CommitId}
     #    - Run: docker push --all-tags ${registry}/${image}
