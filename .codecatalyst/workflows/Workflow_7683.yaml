@@ -123,7 +123,7 @@ Actions:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: newTaskDefenition
+      task-definition: task-definition
       service: Receipts-US-East-Cluster-Service1
       cluster: Receipts-US-East-1-Cluster
       region: us-east-1
