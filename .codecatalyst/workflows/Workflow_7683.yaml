@@ -6,10 +6,12 @@ Triggers:
   - Type: PULLREQUEST
     Events:
       - CLOSED
+
 Actions:
   BuildDocker:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
+
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
@@ -52,6 +54,8 @@ Actions:
         - Run: echo Docker pushing Image ...
         - Run: docker push
             692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
+        - Run: echo "::set-output
+            name=image::692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest"
         #    - Run: docker push $REPOSITORY_URI:latest
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
@@ -75,9 +79,9 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.3
+      image: ${{ steps.BuildDocker.outputs.image }}
       container-name: Receipts-Container1-Deploy
-      task-definition: taskdef.json
+      task-definition: task-definition.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
