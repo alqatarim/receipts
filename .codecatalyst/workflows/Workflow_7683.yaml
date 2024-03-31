@@ -40,6 +40,8 @@ Actions:
         - Run: npm run build
         - Run: cd ../
         - Run: echo Logging in to ECR...
+        - Run: echo The ECR log command is...  aws ecr get-login-password --region $AWS_REGION | docker login --username
+            AWS --password-stdin $ECR_REGISTRY
         - Run: aws ecr get-login-password --region $AWS_REGION | docker login --username
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
