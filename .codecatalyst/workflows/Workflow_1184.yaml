@@ -13,9 +13,9 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest
+      image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.5
       container-name: Receipts-Container1-Deploy
-      task-definition: task-definition.json
+      task-definition: Receipts-task1-Deploy.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
@@ -24,9 +24,7 @@ Actions:
         - Name: TaskDefArtifact
           Files:
             - task-definition*
-    # Specifies the source and/or artifacts to pass to the action as input.
-    Inputs:
-      Sources: []
+
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
