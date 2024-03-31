@@ -13,7 +13,7 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo
+      image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest
       container-name: Receipts-Container1-Deploy
       task-definition: taskdef.json
     Compute:
