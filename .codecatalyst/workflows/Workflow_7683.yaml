@@ -91,8 +91,8 @@ Actions:
     Caching:
       FileCaching:
         DockerLayersCache:
-          RestoreKeys:
-            - docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
+    #      RestoreKeys:
+   #         -  docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
           Path: /docker/cache
   
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
