@@ -4,7 +4,7 @@
     "containerDefinitions": [
         {
             "name": "Receipts-Container1-Deploy",
-            "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2",
+            "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest",
             "cpu": 2048,
             "memory": 2048,
             "memoryReservation": 2048,
