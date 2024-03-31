@@ -124,9 +124,9 @@ Actions:
     Configuration:
       force-new-deployment: "1"
       task-definition: task-definition
-      service: Receipts-US-East-Cluster-Service1
-      cluster: Receipts-US-East-1-Cluster
-      region: $AWS_REGION
+      service: ${ECS_SERVICE}
+      cluster: ${ECS_CLUSTER}
+      region: ${AWS_REGION}
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
