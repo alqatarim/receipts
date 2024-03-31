@@ -13,9 +13,9 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:0.2
+      image: 692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo
       container-name: Receipts-Container1-Deploy
-      task-definition: ./taskdef.json
+      task-definition: taskdef.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
