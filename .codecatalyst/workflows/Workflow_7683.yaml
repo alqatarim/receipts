@@ -21,6 +21,9 @@ Actions:
         - Name: SourceGithub
           Files:
             - "**/*"
+        - Name: DockerImageArtifact
+          Files:
+            - /docker/cache/image.tar
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
@@ -49,6 +52,8 @@ Actions:
         - Run: echo Docker pushing Image ...
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        - Run: Saving Docker Image for cache...
+        - Run: docker save -o docker/cache/image.tar $ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Querying Task Definition ..
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
@@ -92,8 +97,6 @@ Actions:
         DockerLayersCache:
           #         -  docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
           Path: /docker/cache
-        BuildCache:
-          Path: /buildCache
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
@@ -122,7 +125,7 @@ Actions:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: ${ECS_TASK_DEFINITION}
+      task-definition: ${RenderAmazonECSTaskDefinition_5c.task-definition}
       service: ${ECS_SERVICE}
       cluster: ${ECS_CLUSTER}
       region: ${AWS_REGION}
