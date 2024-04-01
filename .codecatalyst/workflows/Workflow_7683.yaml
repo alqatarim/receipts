@@ -50,7 +50,7 @@ Actions:
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Saving Docker Image for cache...
-        - Run: docker save -o s3://receiptsapps3bucket/docker/cache/image.tar
+        - Run: docker save -o s3://receiptsapps3bucket/docker/cache/image.tar $ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Querying Task Definition ..
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
