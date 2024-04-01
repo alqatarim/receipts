@@ -77,7 +77,7 @@ Actions:
         - Name: AWS_REGION
           Value: me-south-1
         - Name: ECR_REGISTRY
-          Value: 692889134364.dkr.ecr.us-east-1.amazonaws.com
+          Value: 692889134364.dkr.ecr.me-south-1.amazonaws.com
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
