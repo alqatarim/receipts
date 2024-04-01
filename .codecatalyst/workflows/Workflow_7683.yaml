@@ -21,7 +21,6 @@ Actions:
         - Name: SourceGithub
           Files:
             - "**/*"
-
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
@@ -51,7 +50,7 @@ Actions:
         - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Saving Docker Image for cache...
-        - Run: docker save -o docker/cache/image.tar $ECR_REPOSITORY:$IMAGE_TAG
+        - Run: docker save -o s3://receiptsapps3bucket/docker/cache/image.tar
         - Run: echo Querying Task Definition ..
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
@@ -92,9 +91,9 @@ Actions:
           Value: Receipts-Container1-Deploy
     Caching:
       FileCaching:
-        DockerLayersCache:
+        DockerCache:
           #         -  docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
-          Path: /docker/cache
+          Path: s3://receiptsapps3bucket/docker/cache/
         #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
