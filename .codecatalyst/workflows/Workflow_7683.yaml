@@ -75,7 +75,7 @@ Actions:
         - WorkflowSource
       Variables:
         - Name: AWS_REGION
-          Value: us-east-1
+          Value: me-south-1
         - Name: ECR_REGISTRY
           Value: 692889134364.dkr.ecr.us-east-1.amazonaws.com
         - Name: ECR_REPOSITORY
