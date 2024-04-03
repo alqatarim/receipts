@@ -5,7 +5,9 @@ SchemaVersion: "1.0"
 Triggers:
   - Type: PULLREQUEST
     Events:
-      - CLOSED
+      - REVISION
+    Branches:
+      - 20th-branch\/.*
 
 Actions:
   BuildDocker:
@@ -21,6 +23,8 @@ Actions:
         - Name: SourceGithub
           Files:
             - "**/*"
+      Variables:
+        - IMAGE
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
@@ -43,20 +47,24 @@ Actions:
         - Run: aws ecr get-login-password --region $AWS_REGION | docker login --username
             AWS --password-stdin $ECR_REGISTRY
         - Run: echo Building Docker Image ...
-        - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-        - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG
-            $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        - Run: docker build -t $ECR_REPOSITORY .
+        # - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+        - Run: docker tag $ECR_REPOSITORY
+            $ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        #  - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG    
         - Run: echo Docker pushing Image ...
-        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        - Run: echo Saving Docker Image in s3 for cache...
-        - Run: docker save -o image.tar $ECR_REPOSITORY
-        - Run: aws s3 cp image.tar s3://receiptsapps3bucket/docker/cache/image.tar
-        - Run: echo Querying Task Definition ..
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
+        - Run: echo Exporting Docker Image to next Action Step ...
+        - Run: export IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        #  - Run: echo Saving Docker Image in s3 for cache...
+        #  - Run: docker save -o image.tar $ECR_REPOSITORY
+        #    - Run: aws s3 cp image.tar s3://receiptsapps3bucket/docker/cache/image.tar
+        # - Run: echo Querying Task Definition ..
+        # - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
-        - Run: echo Updating Task Definition ...
-        - Run: cat $ECS_TASK_DEFINITION > task-definition.json
+        #  - Run: echo Updating Task Definition ...
+        #  - Run: cat $ECS_TASK_DEFINITION > task-definition.json
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -85,25 +93,25 @@ Actions:
         - Name: ECS_SERVICE
           Value: Receipts-Cluster-Service2-Deployment
         - Name: ECS_CLUSTER
-          Value: ReceiptsCluster
+          Value: arn:aws:ecs:me-south-1:692889134364:cluster/ReceiptsCluster
         - Name: ECS_TASK_DEFINITION
           Value: Receipts-task1-Deploy.json
         - Name: CONTAINER_NAME
           Value: Receipts-Container1-Deploy
-    Caching:
-      FileCaching:
-        DockerCache:
+          #  Caching:
+          #  FileCaching:
+          #   DockerCache:
           #         -  docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
-          Path: s3://receiptsapps3bucket/docker/cache/
-        #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
+          #     Path: s3://receiptsapps3bucket/docker/cache/
+          #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+      image: ${IMAGE}
       container-name: Receipts-Container1-Deploy
-      task-definition: Receipts-task1-Deploy.json
+      task-definition: task-definition.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
@@ -118,12 +126,14 @@ Actions:
     Inputs:
       Artifacts:
         - SourceGithub
-      Sources: []
+      Sources:
+        - WorkflowSource
+
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: ${RenderAmazonECSTaskDefinition_5c.task-definition}
+      task-definition: ${task-definition}
       service: ${ECS_SERVICE}
       cluster: ${ECS_CLUSTER}
       region: ${AWS_REGION}
