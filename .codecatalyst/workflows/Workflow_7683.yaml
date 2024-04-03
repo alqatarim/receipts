@@ -1,4 +1,7 @@
 Name: Workflow_7683
+Compute:
+  Type: LAMBDA
+  Fleet: Linux.Arm64.Large
 SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
@@ -44,23 +47,29 @@ Actions:
         - Run: npm run build
         - Run: cd ../
         - Run: echo Logging in to ECR
-        - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login --username
-            AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
-            
+        - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login
+            --username AWS --password-stdin
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
+
         - Run: echo Building Docker Image ...
-        - Run: docker build -t $ECR_REPOSITORY .
-           --cache-to mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache \
-           --cache-from type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache .
+        - Run: docker build -t $ECR_REPOSITORY \ --cache-to
+            mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
+            \ --cache-from
+            type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
+            .
 
         - Run: docker tag $ECR_REPOSITORY
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
 
         - Run: echo Docker pushing Image ...
-        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        - Run: docker push
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         - Run: echo Exporting Docker Image to next Action Step ...
-        - Run: export IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        - Run: export
+            IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         - Run: echo Describing ECS Task Definition ...
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy.json
+        - Run: aws ecs describe-task-definition --task-definition
+            Receipts-task1-Deploy.json
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
         - Run: cat $ECS_TASK_DEFINITION > task-definition.json
@@ -99,7 +108,6 @@ Actions:
           Value: Receipts-Container1-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
-
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
@@ -108,7 +116,7 @@ Actions:
     Configuration:
       image: ${IMAGE}
       container-name: ${CONTAINER_NAME}
-      task-definition: Task-definition.json 
+      task-definition: Task-definition.json
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
