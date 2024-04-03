@@ -1,7 +1,7 @@
 Name: Workflow_7683
 Compute:
-  Type: LAMBDA
-  Fleet: Linux.Arm64.Large
+  Type: EC2
+  Fleet: Linux.x86-64.XLarge
 SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
