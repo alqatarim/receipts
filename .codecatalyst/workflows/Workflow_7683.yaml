@@ -44,19 +44,19 @@ Actions:
         - Run: npm run build
         - Run: cd ../
         - Run: echo Logging in to ECR
-        - Run: aws ecr get-login-password --region $AWS_REGION | docker login --username
-            AWS --password-stdin $ECR_REGISTRY
+        - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login --username
+            AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
         - Run: echo Building Docker Image ...
         - Run: docker build -t $ECR_REPOSITORY .
         # - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
         - Run: docker tag $ECR_REPOSITORY
-            $ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         #  - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG    
         - Run: echo Docker pushing Image ...
-        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Exporting Docker Image to next Action Step ...
-        - Run: export IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        - Run: export IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -74,10 +74,10 @@ Actions:
       Sources:
         - WorkflowSource
       Variables:
-        - Name: AWS_REGION
+        - Name: BUILD_AWS_REGION
           Value: me-south-1
-        - Name: ECR_REGISTRY
-          Value: 692889134364.dkr.ecr.me-south-1.amazonaws.com
+        - Name: DEPLOY_AWS_REGION
+          Value: me-south-1
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
@@ -85,12 +85,12 @@ Actions:
         - Name: ECS_SERVICE
           Value: Receipts-Cluster-Service2-Deployment
         - Name: ECS_CLUSTER
-          Value: arn:aws:ecs:me-south-1:692889134364:cluster/ReceiptsCluster
+          Value: ReceiptsCluster
         - Name: ECS_TASK_DEFINITION
           Value: Receipts-task1-Deploy.json
         - Name: CONTAINER_NAME
           Value: Receipts-Container1-Deploy
-        - Name: ACCOUNT_ID
+        - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
 
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
@@ -100,7 +100,7 @@ Actions:
     # Defines the action's properties.
     Configuration:
       image: ${IMAGE}
-      container-name: Receipts-Container1-Deploy
+      container-name: Task-definition.json
       task-definition: ${ECS_TASK_DEFINITION}
     Compute:
       Type: EC2
@@ -123,8 +123,8 @@ Actions:
       force-new-deployment: "1"
       task-definition: /artifacts/DeployToAmazonECS_4c/TaskDefArtifact/${RenderAmazonECSTaskDefinition_5c.task-definition}
       service: ${ECS_SERVICE}
-      cluster: ${ECS_CLUSTER}
-      region: ${AWS_REGION}
+      cluster: arn:aws:ecs:${DEPLOY_AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${ECS_CLUSTER}
+      region: ${DEPLOY_AWS_REGION}
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
