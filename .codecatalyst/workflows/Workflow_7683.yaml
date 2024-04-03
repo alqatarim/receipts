@@ -100,8 +100,8 @@ Actions:
     # Defines the action's properties.
     Configuration:
       image: ${IMAGE}
-      container-name: Task-definition.json
-      task-definition: ${ECS_TASK_DEFINITION}
+      container-name: ${CONTAINER_NAME}
+      task-definition: Task-definition.json 
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
