@@ -53,7 +53,7 @@ Actions:
             $ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         #  - Run: docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG    
         - Run: echo Docker pushing Image ...
-        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY
+        - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Exporting Docker Image to next Action Step ...
         - Run: export IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
