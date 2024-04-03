@@ -57,14 +57,6 @@ Actions:
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Exporting Docker Image to next Action Step ...
         - Run: export IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-        #  - Run: echo Saving Docker Image in s3 for cache...
-        #  - Run: docker save -o image.tar $ECR_REPOSITORY
-        #    - Run: aws s3 cp image.tar s3://receiptsapps3bucket/docker/cache/image.tar
-        # - Run: echo Querying Task Definition ..
-        # - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
-        #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
-        #  - Run: echo Updating Task Definition ...
-        #  - Run: cat $ECS_TASK_DEFINITION > task-definition.json
         #  - Run: docker push $REPOSITORY_URI:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
@@ -98,11 +90,9 @@ Actions:
           Value: Receipts-task1-Deploy.json
         - Name: CONTAINER_NAME
           Value: Receipts-Container1-Deploy
-          #  Caching:
-          #  FileCaching:
-          #   DockerCache:
-          #         -  docker-cache-${{ checksum "Dockerfile" }}-${{ checksum "dependencies.lock" }}-${{ WorkflowSource.BUILD_VERSION }}
-          #     Path: s3://receiptsapps3bucket/docker/cache/
+        - Name: ACCOUNT_ID
+          Value: "692889134364"
+
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
@@ -111,7 +101,7 @@ Actions:
     Configuration:
       image: ${IMAGE}
       container-name: Receipts-Container1-Deploy
-      task-definition: task-definition.json
+      task-definition: ${ECS_TASK_DEFINITION}
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
@@ -126,14 +116,12 @@ Actions:
     Inputs:
       Artifacts:
         - SourceGithub
-      Sources:
-        - WorkflowSource
 
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: ${task-definition}
+      task-definition: /artifacts/DeployToAmazonECS_4c/TaskDefArtifact/${RenderAmazonECSTaskDefinition_5c.task-definition}
       service: ${ECS_SERVICE}
       cluster: ${ECS_CLUSTER}
       region: ${AWS_REGION}
