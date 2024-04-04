@@ -51,14 +51,19 @@ Actions:
             --username AWS --password-stdin
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
         # Create a new builder instance with the docker-container driver
-        - Run: echo Creating Mybuilder Docker Container ...
-        - Run: docker buildx create --use --driver docker-container --name mybuilder
-        - Run: echo Building and Pushing Docker Image ...
-
-        - Run: docker buildx build --push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-to mode=max,image-manifest=true,oci-mediatypes=true,type=local,ref=/path/to/docker/cache/ --cache-from type=local,ref=/path/to/docker/cache.
-        #       $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-        #src=path/to/cache .
+    #    - Run: echo Creating Mybuilder Docker Container ...
+    #    - Run: docker buildx create --use --driver docker-container --name mybuilder
+    #    - Run: echo Building and Pushing Docker Image ...
+        - Run: echo Building Docker Image ...
+        - Run: docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        # - Run: docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
         
+        - Run: echo Docker pushing Image ...
+        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-from /path/to/docker/cache --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} -t ${WorkflowSource.CommitId}
+        - Run: docker save -o /path/to/docker/cache/image.tar $ECR_REPOSITORY:${WorkflowSource.CommitId}
+        
+        
+        #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
      #   - Run: docker buildx build --push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
      #       --cache-to
      #       mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
