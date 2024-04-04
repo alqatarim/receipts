@@ -9,8 +9,6 @@ Triggers:
   - Type: PULLREQUEST
     Events:
       - REVISION
-    Branches:
-      - 20th-branch
 
 Actions:
   BuildDocker:
