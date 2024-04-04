@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navigate to your application's directory
-cd /var/www/receipts/node-backend
+cd /var/www/receipts/
 
 # Install npm dependencies
 npm install
