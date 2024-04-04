@@ -32,6 +32,13 @@ Actions:
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
       Steps:
+      
+        - Run: echo Logging in to ECR
+        - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login
+            --username AWS --password-stdin
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
+        - Run: echo Docker Pulling Image ...
+        - Run: docker pull $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG || true
         - Run: echo installing npm ...
         - Run: npm install
         - Run: echo Navigating to node-backend directory ...
@@ -46,19 +53,15 @@ Actions:
         - Run: echo running npm run build ...
         - Run: npm run build
         - Run: cd ../
-        - Run: echo Logging in to ECR
-        - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login
-            --username AWS --password-stdin
-            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
+        
+       
         # Create a new builder instance with the docker-container driver
     #    - Run: echo Creating Mybuilder Docker Container ...
     #    - Run: docker buildx create --use --driver docker-container --name mybuilder
     #    - Run: echo Building and Pushing Docker Image ...
-        - Run: echo Docker Pulling Image ...
-        - Run: docker pull $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} || true
         - Run: echo Building Docker Image ...
-        - Run:  docker build --cache-from $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --tag $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} .
-        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        - Run:  docker build --cache-from $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG --tag $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG .
+        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
         
         
         
@@ -80,7 +83,7 @@ Actions:
         - Run: cat $ECS_TASK_DEFINITION.json > task-definition.json
         - Run: echo Exporting Docker Image to next Action Step ...
         - Run: export
-            IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+            IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
         Registry: CODECATALYST
@@ -112,10 +115,6 @@ Actions:
           Value: Receipts-task1-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
-    Caching:
-      FileCaching:
-        DockerLayersCache:
-          Path: /path/to/docker/cache/
 
 
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
