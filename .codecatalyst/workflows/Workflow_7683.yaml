@@ -110,7 +110,7 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: ${BuildDocker.IMAGE}
+      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${BUILD_AWS_REGION}.amazonaws.com//${ECR_REPOSITORY}:${IMAGE_TAG}
       container-name: ${CONTAINER_NAME}
       task-definition: ${ECS_TASK_DEFINITION}
     Outputs:
