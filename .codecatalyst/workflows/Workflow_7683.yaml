@@ -8,7 +8,7 @@ SchemaVersion: "1.0"
 Triggers:
   - Type: PULLREQUEST
     Events:
-      - REVISION
+      - CLOSED
 
 Actions:
   BuildDocker:
@@ -74,7 +74,7 @@ Actions:
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
-          Value: "0.6"
+          Value: "0.7"
         - Name: ECS_SERVICE
           Value: Receipts-Cluster-Service2-Deployment
         - Name: ECS_CLUSTER
