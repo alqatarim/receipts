@@ -28,6 +28,15 @@ Actions:
             - "**/*"
       Variables:
         - IMAGE
+        - BUILD_AWS_REGION
+        - DEPLOY_AWS_REGION
+        - ECR_REPOSITORY
+        - IMAGE_TAG
+        - ECS_SERVICE
+        - ECS_CLUSTER
+        - ECS_TASK_DEFINITION
+        - CONTAINER_NAME
+        - AWS_ACCOUNT_ID
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
@@ -50,7 +59,7 @@ Actions:
         - Run: docker push
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Describing Task Definition ...
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --region me-south-1
+        - Run: aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION --region $AWS_ACCOUNT_ID
 
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
@@ -95,9 +104,9 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1.0.4
     # Defines the action's properties.
     Configuration:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${BUILD_AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}
-      container-name: Receipts-Container1-Deploy
-      task-definition: Receipts-task1-Deploy.json
+      image: ${BuildDocker.AWS_ACCOUNT_ID}.dkr.ecr.${BuildDocker.BUILD_AWS_REGION}.amazonaws.com/${BuildDocker.ECR_REPOSITORY}:${BuildDocker.IMAGE_TAG}
+      container-name: ${BuildDocker.CONTAINER_NAME}
+      task-definition: ${BuildDocker.ECS_TASK_DEFINITION}
       
       #container-name: ${CONTAINER_NAME}
       #task-definition: ${BuildDocker.task-definition.json}
@@ -120,9 +129,9 @@ Actions:
     Configuration:
       force-new-deployment: "1"
       task-definition: task-definition
-      service: ${ECS_SERVICE}
-      cluster: arn:aws:ecs:${DEPLOY_AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${ECS_CLUSTER}
-      region: ${DEPLOY_AWS_REGION}
+      service: ${BuildDocker.ECS_SERVICE}
+      cluster: arn:aws:ecs:${BuildDocker.DEPLOY_AWS_REGION}:${BuildDocker.AWS_ACCOUNT_ID}:cluster/${BuildDocker.ECS_CLUSTER}
+      region: ${BuildDocker.DEPLOY_AWS_REGION}
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
