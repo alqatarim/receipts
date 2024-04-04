@@ -1,4 +1,4 @@
-Name: Workflow_7683
+Name: Workflow_BuildRendDeploy
 Compute:
   Type: EC2
   Fleet: Linux.x86-64.Large
@@ -86,7 +86,7 @@ Actions:
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
-          Value: "0.11"
+          Value: "0.12"
         - Name: ECS_SERVICE
           Value: Receipts-Cluster-Service2-Deployment
         - Name: ECS_CLUSTER
