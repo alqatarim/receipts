@@ -65,7 +65,7 @@ Actions:
         - Run: echo Exporting Docker Image to next Action Step ...
         - Run: export
             IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-            
+
         - Run: echo Describing Task Definition ...
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
@@ -121,15 +121,13 @@ Actions:
       - BuildDocker
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
-      Artifacts:
-        - SourceGithub
       Sources: []
 
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: /artifacts/DeployToAmazonECS_4c/TaskDefArtifact/${RenderAmazonECSTaskDefinition_5c.task-definition}
+      task-definition: task-definition
       service: ${ECS_SERVICE}
       cluster: arn:aws:ecs:${DEPLOY_AWS_REGION}:${AWS_ACCOUNT_ID}:cluster/${ECS_CLUSTER}
       region: ${DEPLOY_AWS_REGION}
