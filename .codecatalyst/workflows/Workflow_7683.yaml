@@ -55,11 +55,7 @@ Actions:
     #    - Run: docker buildx create --use --driver docker-container --name mybuilder
     #    - Run: echo Building and Pushing Docker Image ...
         - Run: echo Building Docker Image ...
-        - Run: |
-            docker build . \
-              --cache-from /path/to/docker/cache \
-              --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} \
-              -t $ECR_REPOSITORY:${WorkflowSource.CommitId}
+        - Run: docker build . --cache-from /path/to/docker/cache --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} -t $ECR_REPOSITORY:${WorkflowSource.CommitId}
         - Run: docker save -o /path/to/docker/cache/image.tar $ECR_REPOSITORY:${WorkflowSource.CommitId}
         
         - Run: echo Docker pushing Image ...
