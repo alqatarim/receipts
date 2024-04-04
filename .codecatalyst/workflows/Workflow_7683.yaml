@@ -2,6 +2,7 @@ Name: Workflow_7683
 Compute:
   Type: EC2
   Fleet: Linux.x86-64.Large
+  SharedInstance: true
 SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
@@ -59,7 +60,8 @@ Actions:
         - Run: docker push
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Describing Task Definition ...
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --region $BUILD_AWS_REGION
+        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
+            --region $BUILD_AWS_REGION
 
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
@@ -107,7 +109,6 @@ Actions:
       image: ${BuildDocker.AWS_ACCOUNT_ID}.dkr.ecr.${BuildDocker.BUILD_AWS_REGION}.amazonaws.com/${BuildDocker.ECR_REPOSITORY}:${BuildDocker.IMAGE_TAG}
       container-name: ${BuildDocker.CONTAINER_NAME}
       task-definition: ${BuildDocker.ECS_TASK_DEFINITION}
-      
       #container-name: ${CONTAINER_NAME}
       #task-definition: ${BuildDocker.task-definition.json}
       # ${ECS_TASK_DEFINITION}
