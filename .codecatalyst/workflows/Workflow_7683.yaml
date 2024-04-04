@@ -55,11 +55,17 @@ Actions:
     #    - Run: docker buildx create --use --driver docker-container --name mybuilder
     #    - Run: echo Building and Pushing Docker Image ...
         - Run: echo Building Docker Image ...
-        - Run: docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-
-        - Run: echo Docker pushing Image ...
-        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-from type=local, src=/path/to/docker/cache --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} -t ${WorkflowSource.CommitId}
+        - Run: |
+            docker build . \
+              --cache-from /path/to/docker/cache \
+              --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} \
+              -t $ECR_REPOSITORY:${WorkflowSource.CommitId}
         - Run: docker save -o /path/to/docker/cache/image.tar $ECR_REPOSITORY:${WorkflowSource.CommitId}
+        
+        - Run: echo Docker pushing Image ...
+        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+        
+        
         
         
         #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
