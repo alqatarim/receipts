@@ -54,10 +54,10 @@ Actions:
         - Run: echo Creating Mybuilder Docker Container ...
         - Run: docker buildx create --use --driver docker-container --name mybuilder
         - Run: echo Building and Pushing Docker Image ...
-        - Run: docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-from /path/to/docker/cache --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} -t ${WorkflowSource.CommitId}
-        - Run: docker save -o /path/to/docker/cache/image.tar $ECR_REPOSITORY:${WorkflowSource.CommitId}
+     #   - Run: docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-from /path/to/docker/cache --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} -t ${WorkflowSource.CommitId}
+      #  - Run: docker save -o /path/to/docker/cache/image.tar $ECR_REPOSITORY:${WorkflowSource.CommitId}
         
-        - Run: docker push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+      #  - Run: docker push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         - Run: docker buildx build --push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-to /path/to/docker/cache/ --cache-from /path/to/docker/cache
         #       $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
         
