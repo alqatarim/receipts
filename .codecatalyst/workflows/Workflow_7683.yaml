@@ -112,7 +112,7 @@ Actions:
     Configuration:
       image: ${BuildDocker.IMAGE}
       container-name: ${CONTAINER_NAME}
-      task-definition: task-definition.json
+      task-definition: ${ECS_TASK_DEFINITION}
     Outputs:
       Artifacts:
         - Name: TaskDefArtifact
