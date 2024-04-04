@@ -62,7 +62,6 @@ Actions:
         - Run: echo Describing Task Definition ...
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
             --region $BUILD_AWS_REGION
-
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
         - Run: cat $ECS_TASK_DEFINITION > task-definition.json
@@ -89,7 +88,7 @@ Actions:
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
-          Value: "0.9"
+          Value: "0.11"
         - Name: ECS_SERVICE
           Value: Receipts-Cluster-Service2-Deployment
         - Name: ECS_CLUSTER
