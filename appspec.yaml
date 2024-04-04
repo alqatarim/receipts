@@ -1,7 +1,3 @@
-version: 0.0
-os: linux
-codedeploy-application: "Receipts"
-# https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-resources.html#reference-appspec-file-structure-resources-ecs
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
@@ -10,10 +6,13 @@ Resources:
         LoadBalancerInfo:
           ContainerName: "Receipts-Container1-Deploy"
           ContainerPort: 80
+# Optional properties
 
-files:
-  - source: /node-backend
-    destination: /var/www/receipts
+
+
+# files:
+#  - source: /node-backend
+#    destination: /var/www/receipts
 #hooks:
  # BeforeInstall:
  #   - location: deploy_scripts/before_install.sh
