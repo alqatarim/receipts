@@ -16,6 +16,7 @@ Actions:
   BuildDocker:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
+    
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
@@ -52,7 +53,7 @@ Actions:
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
 
         - Run: echo Building Docker Image ...
-        - Run: docker buildx -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-to mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache --cache-from type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache .
+        - Run: docker buildx build -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-to mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache --cache-from type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache .
 
         - Run: docker tag $ECR_REPOSITORY
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
