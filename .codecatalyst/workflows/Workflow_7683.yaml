@@ -51,7 +51,9 @@ Actions:
         - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login
             --username AWS --password-stdin
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
-
+        # Create a new builder instance with the docker-container driver
+        - Run: echo Creating Mybuilder Docker Container ...
+        - Run: docker buildx create --use --driver docker-container --name mybuilder
         - Run: echo Building Docker Image ...
         - Run: docker buildx build -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-to mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache --cache-from type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache .
 
