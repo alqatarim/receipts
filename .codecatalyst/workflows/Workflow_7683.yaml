@@ -110,7 +110,7 @@ Actions:
     Caching:
       FileCaching:
         DockerLayersCache:
-          Path: /path/to/docker/cache
+          Path: /path/to/docker/cache/image.tar
 
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
