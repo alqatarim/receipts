@@ -19,7 +19,7 @@ Actions:
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
       AutoDiscoverReports:
-        Enabled: true
+        Enabled: false
         # Use as prefix for the report files
         ReportNamePrefix: rpt
       Artifacts:
@@ -84,7 +84,7 @@ Actions:
         - Name: ECS_TASK_DEFINITION
           Value: Receipts-task1-Deploy.json
         - Name: CONTAINER_NAME
-          Value: Receipts-task1-Deploy
+          Value: Receipts-Container1-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
@@ -95,7 +95,8 @@ Actions:
     Configuration:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${BUILD_AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}
       container-name: ${CONTAINER_NAME}
-      task-definition: ${ECS_TASK_DEFINITION}
+      task-definition: task-definition.json
+      # ${ECS_TASK_DEFINITION}
     Outputs:
       Artifacts:
         - Name: TaskDefArtifact
