@@ -126,7 +126,7 @@ Actions:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: task-definition
+      task-definition: ${RenderAmazonECSTaskDefinition_5c.task-definition}
       service: ${BuildDocker.ECS_SERVICE}
       cluster: arn:aws:ecs:${BuildDocker.DEPLOY_AWS_REGION}:${BuildDocker.AWS_ACCOUNT_ID}:cluster/${BuildDocker.ECS_CLUSTER}
       region: ${BuildDocker.DEPLOY_AWS_REGION}
