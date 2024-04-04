@@ -1,4 +1,4 @@
-Name: Workflow_070e
+Name: Workflow_RenderAndDeploy
 SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
@@ -64,9 +64,7 @@ Actions:
           Value: Receipts-Container1-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
-      
-        
-        
+
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
