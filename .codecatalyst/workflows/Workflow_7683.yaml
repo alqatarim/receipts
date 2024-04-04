@@ -50,6 +50,7 @@ Actions:
         - Run: docker push
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Describing Task Definition ...
+        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
         - Run: cat $ECS_TASK_DEFINITION > task-definition.json
