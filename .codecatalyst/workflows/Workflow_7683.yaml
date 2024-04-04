@@ -51,28 +51,31 @@ Actions:
             --username AWS --password-stdin
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
         # Create a new builder instance with the docker-container driver
-        - Run: echo Creating Mybuilder Docker Container ...
-        - Run: docker buildx create --use --driver docker-container --name mybuilder
+     #   - Run: echo Creating Mybuilder Docker Container ...
+     #   - Run: docker buildx create --use --driver docker-container --name mybuilder
         - Run: echo Building and Pushing Docker Image ...
-        - Run: docker buildx build --push -t
-            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-            --cache-to
-            mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
-            --cache-from
-            type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
-            .
+        
+        - Run: docker build $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId} --cache-from /path/to/docker/cache --build-arg BUILD_VERSION=${WorkflowSource.BUILD_VERSION} -t ${WorkflowSource.CommitId}
+        - Run: docker save -o /path/to/docker/cache/image.tar $ECR_REPOSITORY:${WorkflowSource.CommitId}
+        
+        - Run: docker push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+     #   - Run: docker buildx build --push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+     #       --cache-to
+     #       mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
+   #         --cache-from
+      #      type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
+       #     .
         #       $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-        - Run: echo Listing Existing Task Definitions ...
-        - Run: aws ecs list-task-definitions
+
         - Run: echo Describing Task Definition ...
-        - Run: aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION --region $BUILD_AWS_REGION
+        - Run: aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION
+            --region $BUILD_AWS_REGION
         #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy--query taskDefinition > task-definition.json
         - Run: echo Updating Task Definition ...
         - Run: cat $ECS_TASK_DEFINITION.json > task-definition.json
         - Run: echo Exporting Docker Image to next Action Step ...
         - Run: export
             IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-        
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
         Registry: CODECATALYST
@@ -104,7 +107,11 @@ Actions:
           Value: Receipts-task1-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
-          #  - Run: docker tag $ECR_REPOSITORY $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
+    Caching:
+      FileCaching:
+        DockerLayersCache:
+          Path: /path/to/docker/cache
+
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
@@ -113,7 +120,7 @@ Actions:
     Configuration:
       image: ${BuildDocker.IMAGE}
       container-name: ${CONTAINER_NAME}
-      task-definition: ${ECS_TASK_DEFINITION}.json
+      task-definition: task-definition.json
     Outputs:
       Artifacts:
         - Name: TaskDefArtifact
