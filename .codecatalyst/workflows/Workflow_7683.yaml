@@ -22,23 +22,20 @@ Actions:
         Enabled: true
         # Use as prefix for the report files
         ReportNamePrefix: rpt
-      Artifacts:
-        - Name: SourceGithub
-          Files:
-            - "**/*"
       Variables:
         - IMAGE
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
       Steps:
-      
         - Run: echo Logging in to ECR
         - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login
             --username AWS --password-stdin
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
         - Run: echo Docker Pulling Image ...
-        - Run: docker pull $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG || true
+        - Run: docker pull
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            || true
         - Run: echo installing npm ...
         - Run: npm install
         - Run: echo Navigating to node-backend directory ...
@@ -53,28 +50,15 @@ Actions:
         - Run: echo running npm run build ...
         - Run: npm run build
         - Run: cd ../
-        
-       
-        # Create a new builder instance with the docker-container driver
-    #    - Run: echo Creating Mybuilder Docker Container ...
-    #    - Run: docker buildx create --use --driver docker-container --name mybuilder
-    #    - Run: echo Building and Pushing Docker Image ...
+        #    - Run: echo Building and Pushing Docker Image ...
         - Run: echo Building Docker Image ...
-        - Run:  docker build --cache-from $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG --tag $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG .
-        - Run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
-        
-        
-        
-        
-        #   - Run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-     #   - Run: docker buildx build --push -t $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-     #       --cache-to
-     #       mode=max,image-manifest=true,oci-mediatypes=true,type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
-   #         --cache-from
-      #      type=registry,ref=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:cache
-       #     .
-        #       $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
-
+        - Run: docker build --cache-from
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            --tag
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            .
+        - Run: docker push
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
         - Run: echo Describing Task Definition ...
         - Run: aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION
             --region $BUILD_AWS_REGION
@@ -115,8 +99,7 @@ Actions:
           Value: Receipts-task1-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
-
-
+          #       $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${WorkflowSource.CommitId}
           #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
