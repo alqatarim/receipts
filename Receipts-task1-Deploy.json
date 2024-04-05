@@ -1,5 +1,5 @@
 {
-    "executionRoleArn": "arn:aws:iam:692889134364:role/codecatalyst-ecs-task-execution-role",
+    "executionRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
     "containerDefinitions": [
         {
             "name": "Receipts-Container1-Deploy",
