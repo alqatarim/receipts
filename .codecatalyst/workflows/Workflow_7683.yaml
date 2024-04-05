@@ -86,7 +86,7 @@ Actions:
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
-          Value: "0.12"
+          Value: "0.13"
         - Name: ECS_SERVICE
           Value: Receipts-Cluster-Service2-Deployment
         - Name: ECS_CLUSTER
