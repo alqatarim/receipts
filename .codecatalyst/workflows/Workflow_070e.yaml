@@ -19,60 +19,24 @@ Actions:
       image: $AWS_ACCOUNT_ID.dkr.ecr.BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
       container-name: $CONTAINER_NAME
       task-definition: $ECS_TASK_DEFINITION
-      #container-name: ${CONTAINER_NAME}
-      #task-definition: ${BuildDocker.task-definition.json}
-      # ${ECS_TASK_DEFINITION}
+    Timeout: 10 # ${ECS_TASK_DEFINITION}
     Outputs:
-      Variables:
-        - IMAGE
-        - BUILD_AWS_REGION
-        - DEPLOY_AWS_REGION
-        - ECR_REPOSITORY
-        - IMAGE_TAG
-        - ECS_SERVICE
-        - ECS_CLUSTER
-        - ECS_TASK_DEFINITION
-        - CONTAINER_NAME
-        - AWS_ACCOUNT_ID
       Artifacts:
         - Name: TaskDefArtifact
           Files:
             - task-definition*
-    # Specifies the source and/or artifacts to pass to the action as input.
-    Environment:
-      Connections:
-        - Role: CodeCatalystDevRole
-          Name: "692889134364"
-      Name: test
     Inputs:
-      Variables:
-        - Name: BUILD_AWS_REGION
-          Value: me-south-1
-        - Name: DEPLOY_AWS_REGION
-          Value: me-south-1
-        - Name: ECR_REPOSITORY
-          Value: receipts-ecr-repo
-        - Name: IMAGE_TAG
-          Value: "0.11"
-        - Name: ECS_SERVICE
-          Value: Receipts-Cluster-Service2-Deployment
-        - Name: ECS_CLUSTER
-          Value: ReceiptsCluster
-        - Name: ECS_TASK_DEFINITION
-          Value: Receipts-task1-Deploy.json
-        - Name: CONTAINER_NAME
-          Value: Receipts-Container1-Deploy
-        - Name: AWS_ACCOUNT_ID
-          Value: "692889134364"
+      Sources: []
 
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: ${RenderAmazonECSTaskDefinition.task-definition}
+      task-definition: ${RenderAmazonECSTaskDefinition.ECS_TASK_DEFINITION}
       service: ${RenderAmazonECSTaskDefinition.ECS_SERVICE}
-      cluster: arn:aws:ecs:${RenderAmazonECSTaskDefinition.DEPLOY_AWS_REGION}:${RenderAmazonECSTaskDefinition.AWS_ACCOUNT_ID}:cluster/${RenderAmazonECSTaskDefinition.ECS_CLUSTER}
+      cluster: ${RenderAmazonECSTaskDefinition.ECS_CLUSTER}
       region: ${RenderAmazonECSTaskDefinition.DEPLOY_AWS_REGION}
+    Timeout: 10
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
