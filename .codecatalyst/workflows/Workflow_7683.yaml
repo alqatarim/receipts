@@ -60,8 +60,6 @@ Actions:
         - Run: echo Describing Task Definition ...
         - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
             --region $BUILD_AWS_REGION
-        #    - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition > task-definition.json
-        #  - Run: echo Updating Task Definition ...
         #  - Run: cat $ECS_TASK_DEFINITION > task-definition.json
         - Run: echo Exporting Docker Image to next Action Step ...
         - Run: export
@@ -97,7 +95,7 @@ Actions:
           Value: Receipts-Container1-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
-          #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
+    Timeout: 10 #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
   RenderAmazonECSTaskDefinition_5c:
     # Identifies the action. Do not modify this value.
     Identifier: aws/ecs-render-task-definition@v1.0.4
@@ -106,9 +104,7 @@ Actions:
       image: ${BuildDocker.AWS_ACCOUNT_ID}.dkr.ecr.${BuildDocker.BUILD_AWS_REGION}.amazonaws.com/${BuildDocker.ECR_REPOSITORY}:${BuildDocker.IMAGE_TAG}
       container-name: ${BuildDocker.CONTAINER_NAME}
       task-definition: ${BuildDocker.ECS_TASK_DEFINITION}
-      #container-name: ${CONTAINER_NAME}
-      #task-definition: ${BuildDocker.task-definition.json}
-      # ${ECS_TASK_DEFINITION}
+    Timeout: 10
     Outputs:
       Artifacts:
         - Name: TaskDefArtifact
@@ -130,6 +126,7 @@ Actions:
       service: ${BuildDocker.ECS_SERVICE}
       cluster: ${BuildDocker.ECS_CLUSTER}
       region: ${BuildDocker.DEPLOY_AWS_REGION}
+    Timeout: 10
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
