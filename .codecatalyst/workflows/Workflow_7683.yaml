@@ -50,7 +50,7 @@ Actions:
             || true
         #    - Run: echo Building and Pushing Docker Image ...
         - Run: echo Building Docker Image ...
-        - Run: docker build --cache-from
+        - Run: docker-compose build --cache-from
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
             --tag
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
