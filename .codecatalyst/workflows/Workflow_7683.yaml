@@ -86,7 +86,7 @@ Actions:
         - Name: ECS_CLUSTER
           Value: ReceiptsCluster
         - Name: ECS_TASK_DEFINITION
-          Value: Receipts-task1-Deploy.json
+          Value: Receipts-task2-Deploy.json
         - Name: CONTAINER_NAME
           Value: Receipts-Container2-Deploy
         - Name: AWS_ACCOUNT_ID
