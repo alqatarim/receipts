@@ -1,113 +1,24 @@
 {
-    
-    "taskDefinitionArn": "arn:aws:ecs:me-south-1:692889134364:task-definition/Receipts-task1-Deploy:4",
+    "executionRoleArn": "arn:aws:iam:692889134364:role/codecatalyst-ecs-task-execution-role",
     "containerDefinitions": [
         {
             "name": "Receipts-Container1-Deploy",
             "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest",
-            "cpu": 2048,
-            "memory": 2048,
-            "memoryReservation": 2048,
+            "essential": true,
             "portMappings": [
                 {
-                    "name": "receipts-container1-deploy-80-tcp",
-                    "containerPort": 80,
                     "hostPort": 80,
                     "protocol": "tcp",
-                    "appProtocol": "http"
+                    "containerPort": 80
                 }
-            ],
-            "essential": true,
-            "environment": [],
-            "environmentFiles": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "ulimits": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/Receipts-task1-Deploy",
-                    "awslogs-region": "me-south-1",
-                    "awslogs-stream-prefix": "ecs"
-                },
-                "secretOptions": []
-            },
-            "systemControls": []
-        },
-        {
-            "name": "aws-otel-collector",
-            "image": "public.ecr.aws/aws-observability/aws-otel-collector:v0.38.1",
-            "cpu": 0,
-            "portMappings": [],
-            "essential": true,
-            "command": [
-                "--config=/etc/ecs/ecs-cloudwatch.yaml"
-            ],
-            "environment": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/ecs-aws-otel-sidecar-collector",
-                    "awslogs-region": "me-south-1",
-                    "awslogs-stream-prefix": "ecs"
-                }
-            },
-            "systemControls": []
+            ]
         }
-    ],
-    "family": "Receipts-task1-Deploy",
-    "executionRoleArn": "arn:aws:iam::692889134364:role/ecsTaskExecutionRole",
-    "networkMode": "awsvpc",
-    "revision": 1,
-    "volumes": [],
-    "status": "ACTIVE",
-    "requiresAttributes": [
-        {
-            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-        },
-        {
-            "name": "ecs.capability.execution-role-awslogs"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-        },
-        {
-            "name": "ecs.capability.task-eni"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
-        }
-    ],
-    "placementConstraints": [],
-    "compatibilities": [
-        "EC2",
-        "FARGATE"
     ],
     "requiresCompatibilities": [
         "FARGATE"
     ],
+    "networkMode": "awsvpc",
     "cpu": "4096",
     "memory": "8192",
-    "runtimePlatform": {
-        "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "LINUX"
-    },
-    "registeredAt": "2024-03-26T17:35:31.008Z",
-    "registeredBy": "arn:aws:iam::692889134364:root",
-    "tags": [
-        {
-            "key": "Name",
-            "value": "Receipts Deploy Task1"
-        }
-    ]
+    "family": "Receipts-task1-Deploy"
 }
