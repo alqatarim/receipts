@@ -1,4 +1,4 @@
-Name: Workflow_BuildRendDeploy
+Name: Workflow_Build_Run_Deploy
 Compute:
   Type: EC2
   Fleet: Linux.x86-64.Large
