@@ -8,11 +8,9 @@ SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-  - Type: PULLREQUEST
+  - Type: PUSH
     Branches:
       - main
-    Events:
-      - CLOSED
     FilesChanged:
       - Receipts/aws-workflow-trigger.txt
 
