@@ -105,6 +105,8 @@ Actions:
         - Name: TaskDefArtifact
           Files:
             - task-definition*
+      Variables:
+            - task-definition
     DependsOn:
       - BuildDocker
 
@@ -116,7 +118,7 @@ Actions:
       service: ${BuildDocker.ECS_SERVICE}
       cluster: ${BuildDocker.ECS_CLUSTER}
       region: ${BuildDocker.DEPLOY_AWS_REGION}
-    Timeout: 10
+    Timeout: 15
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
     Environment:
       Connections:
