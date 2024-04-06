@@ -1,12 +1,17 @@
 Name: Workflow_RenderAndDeploy
+Compute:
+  Type: EC2
+  Fleet: Linux.x86-64.XLarge
+  SharedInstance: true
 SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-  - Type: SCHEDULE
+  - Type: PUSH
     Branches:
       - main
-    Expression: 0 0 ? 1 MON *
+    FilesChanged:
+      - Receipts/codeCatalystTrigger.txt
 
 # Required - Define action configurations.
 Actions:
