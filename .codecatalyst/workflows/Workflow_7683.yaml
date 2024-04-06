@@ -8,7 +8,6 @@ SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-Branch-26-DEV
   - Type: PULLREQUEST
     Branches:
       - main
