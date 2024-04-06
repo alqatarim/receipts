@@ -1,4 +1,5 @@
 Name: Workflow_Build_Run_Deploy
+RunMode: QUEUED
 Compute:
   Type: EC2
   Fleet: Linux.x86-64.Large
@@ -82,13 +83,13 @@ Actions:
         - Name: IMAGE_TAG
           Value: ${WorkflowSource.CommitId}
         - Name: ECS_SERVICE
-          Value: Receipts-Cluster-Service2-Deployment
+          Value: Receipts-Cluster-Service2B-Deployment
         - Name: ECS_CLUSTER
           Value: ReceiptsCluster
         - Name: ECS_TASK_DEFINITION
-          Value: Receipts-task1-Deploy.json
+          Value: Receipts-task2-Deploy.json
         - Name: CONTAINER_NAME
-          Value: Receipts-Container1-Deploy
+          Value: Receipts-Container2-Deploy
         - Name: AWS_ACCOUNT_ID
           Value: "692889134364"
     Timeout: 10 #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
