@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "Receipts-Container1-Deploy",
-            "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest",
+            "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo",
             "essential": true,
             "portMappings": [
                 {
