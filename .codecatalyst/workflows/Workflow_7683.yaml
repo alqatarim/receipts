@@ -8,9 +8,10 @@ SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-  - Type: PUSH
+  - Type: SCHEDULE
     Branches:
       - main
+    Expression: 0 * ? 1 1 2026
 
 Actions:
   BuildDocker:
