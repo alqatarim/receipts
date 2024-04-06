@@ -31,6 +31,8 @@ Actions:
         - Name: TaskDefArtifact
           Files:
             - task-definition*
+      Variables:
+            - task-definition
     Inputs:
       Sources:
         - WorkflowSource
@@ -39,7 +41,7 @@ Actions:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: ${WorkflowSource.ECS_TASK_DEFINITION}
+      task-definition: ${RenderAmazonECSTaskDefinition.task-definition}
       service: ${RenderAmazonECSTaskDefinition.ECS_SERVICE}
       cluster: ${RenderAmazonECSTaskDefinition.ECS_CLUSTER}
       region: ${RenderAmazonECSTaskDefinition.DEPLOY_AWS_REGION}
