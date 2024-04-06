@@ -41,7 +41,7 @@ Actions:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
     Configuration:
       force-new-deployment: "1"
-      task-definition: ${RenderAmazonECSTaskDefinition.ECS_TASK_DEFINITION}
+      task-definition: ${WorkflowSource.ECS_TASK_DEFINITION}
       service: ${RenderAmazonECSTaskDefinition.ECS_SERVICE}
       cluster: ${RenderAmazonECSTaskDefinition.ECS_CLUSTER}
       region: ${RenderAmazonECSTaskDefinition.DEPLOY_AWS_REGION}
