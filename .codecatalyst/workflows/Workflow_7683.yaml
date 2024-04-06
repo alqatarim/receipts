@@ -2,7 +2,7 @@ Name: Workflow_Build_Run_Deploy
 RunMode: QUEUED
 Compute:
   Type: EC2
-  Fleet: Linux.x86-64.Large
+  Fleet: Linux.x86-64.2XLarge
   SharedInstance: true
 SchemaVersion: "1.0"
 
