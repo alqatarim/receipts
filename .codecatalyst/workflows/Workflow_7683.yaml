@@ -8,10 +8,14 @@ SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-  - Type: SCHEDULE
+Branch-26-DEV
+  - Type: PULLREQUEST
     Branches:
       - main
-    Expression: 0 * ? 1 1 2026
+    Events:
+      - CLOSED
+    FilesChanged:
+      - Receipts/aws-workflow-trigger.txt
 
 Actions:
   BuildDocker:
