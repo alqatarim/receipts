@@ -10,8 +10,6 @@ Triggers:
   - Type: PUSH
     Branches:
       - main
-    FilesChanged:
-      - Receipts/codeCatalystTrigger.txt
 
 # Required - Define action configurations.
 Actions:
