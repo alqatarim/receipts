@@ -26,7 +26,8 @@ Actions:
           Files:
             - task-definition*
     Inputs:
-      Sources: []
+      Sources:
+        - WorkflowSource
 
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
