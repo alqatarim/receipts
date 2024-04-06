@@ -9,7 +9,7 @@ Resources:
 # Optional properties
 
 
-#
+# hello hamoodi
 # files:
 #  - source: /node-backend
 #    destination: /var/www/receipts
