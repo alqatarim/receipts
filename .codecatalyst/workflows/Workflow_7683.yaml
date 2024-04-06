@@ -8,6 +8,7 @@ SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
+Branch-26-DEV
   - Type: PULLREQUEST
     Branches:
       - main
@@ -58,13 +59,7 @@ Actions:
             .
         - Run: docker push
             $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
-        - Run: echo Describing Task Definition ...
-        - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy
-            --region $BUILD_AWS_REGION
-        #  - Run: cat $ECS_TASK_DEFINITION > task-definition.json
-        - Run: echo Exporting Docker Image to next Action Step ...
-        - Run: export
-            IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+
         - Run: echo DONE BUILD YAAAY!! ...
       Container:
         Registry: CODECATALYST

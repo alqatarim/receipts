@@ -2,6 +2,7 @@ Name: Workflow_RenderAndDeploy
 Compute:
   Type: EC2
   Fleet: Linux.x86-64.XLarge
+
   SharedInstance: true
 SchemaVersion: "1.0"
 
@@ -25,7 +26,7 @@ Actions:
     Configuration:
       image: $AWS_ACCOUNT_ID.dkr.ecr.BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
       container-name: $CONTAINER_NAME
-      task-definition: $ECS_TASK_DEFINITION
+      task-definition: ${WorkflowSource.ECS_TASK_DEFINITION}
     Timeout: 10 # ${ECS_TASK_DEFINITION}
     Outputs:
       Artifacts:
