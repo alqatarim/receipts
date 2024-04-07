@@ -20,5 +20,5 @@
     "networkMode": "awsvpc",
     "cpu": "4096",
     "memory": "8192",
-    "family": "Receipts-task1-Deploy"
+    "family": "ReceiptsBE-task1-Deploy"
 }
