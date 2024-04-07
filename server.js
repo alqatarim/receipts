@@ -1,8 +1,8 @@
-import express from 'express';
-import cors from 'cors';
+var express = require('express');
+var cors = require('cors'); // Import the 'cors' package
+var app = express();
 
-const app = express();
-const PORT = process.env.PORT || 5001;
+var PORT = process.env.PORT || 5002;
 // Enable CORS for all origins and headers
 app.use(cors());
 
@@ -17,9 +17,6 @@ const receiptDetails = [
 app.get('/api/receipts', (_, res) => {
   res.json(receiptDetails);
 });
-
-// Serve static files (e.g., React frontend)
-app.use(express.static('public'));
 
 // Start the server
 app.listen(PORT, () => {
