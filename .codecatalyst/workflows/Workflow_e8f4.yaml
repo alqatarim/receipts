@@ -11,7 +11,7 @@ Triggers:
     Branches:
       - aws-workflow-Branch
     FilesChanged:
-      - receipts/codeCatalystdddd
+      - receipts/codeCatalystdddd.txt
 
 # Required - Define action configurations.
 Actions:
