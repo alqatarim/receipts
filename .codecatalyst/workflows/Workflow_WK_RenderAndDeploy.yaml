@@ -32,7 +32,7 @@ Actions:
             - task-definition*
         - Name: WFsource
           Files:
-            - "*/**"
+            - "**/*"
     Inputs:
       Sources:
         - WorkflowSource
