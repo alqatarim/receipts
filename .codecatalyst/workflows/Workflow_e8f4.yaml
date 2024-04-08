@@ -1,4 +1,4 @@
-Name: Workflow_WK_Build_Run_Deploy
+Name: Workflow_Build_Run_Deploy
 Compute:
   Type: EC2
   Fleet: Linux.Arm64.Large
@@ -9,9 +9,9 @@ SchemaVersion: "1.0"
 Triggers:
   - Type: Push
     Branches:
-      - aws-workflow-Branch
+      - main
     FilesChanged:
-      - receipts/codeCatalystdddd.txt
+      - receipts/codeCatalystTrigger.txt
 
 # Required - Define action configurations.
 Actions:
