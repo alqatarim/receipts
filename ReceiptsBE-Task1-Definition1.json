@@ -1,16 +1,15 @@
 {
-    
-    "taskDefinitionArn": "arn:aws:ecs:me-south-1:692889134364:task-definition/Receipts-task1-Deploy",
+    "taskDefinitionArn": "arn:aws:ecs:me-south-1:692889134364:task-definition/ReceiptsBE-Task1-Definition1",
     "containerDefinitions": [
         {
-            "name": "Receipts-Container1-Deploy",
-            "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest",
+            "name": "ReceiptsBE-Task1-Container1",
+            "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo",
             "cpu": 2048,
-            "memory": 2048,
-            "memoryReservation": 2048,
+            "memory": 4096,
+            "memoryReservation": 4096,
             "portMappings": [
                 {
-                    "name": "receipts-container1-deploy-80-tcp",
+                    "name": "receiptsfrontend1-container1-port",
                     "containerPort": 80,
                     "hostPort": 80,
                     "protocol": "tcp",
@@ -19,15 +18,15 @@
             ],
             "essential": true,
             "environment": [],
-            "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
-            "ulimits": [],
+            "startTimeout": 60,
+            "stopTimeout": 60,
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/Receipts-task1-Deploy",
+                    "awslogs-group": "/ecs/ReceiptsBE-Task1-Definition1",
                     "awslogs-region": "me-south-1",
                     "awslogs-stream-prefix": "ecs"
                 },
@@ -59,10 +58,11 @@
             "systemControls": []
         }
     ],
-    "family": "Receipts-task1-Deploy",
-    "executionRoleArn": "arn:aws:iam::692889134364:role/ecsTaskExecutionRole",
+    "family": "ReceiptsBE-Task1-Definition1",
+    "taskRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
+    "executionRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 10,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -73,10 +73,22 @@
             "name": "ecs.capability.execution-role-awslogs"
         },
         {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.container-ordering"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
@@ -102,12 +114,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-03-26T17:35:31.008Z",
+    "registeredAt": "2024-04-08T09:45:00.889Z",
     "registeredBy": "arn:aws:iam::692889134364:root",
-    "tags": [
-        {
-            "key": "Name",
-            "value": "Receipts Deploy Task1"
-        }
-    ]
+    "tags": []
 }
