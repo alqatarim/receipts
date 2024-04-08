@@ -1,7 +1,7 @@
 Name: Workflow_Build_Run_Deploy
 Compute:
   Type: EC2
-  Fleet: Linux.Arm64.Large
+  Fleet: Provisioned-fleet-1
   SharedInstance: true
 SchemaVersion: "1.0"
 
