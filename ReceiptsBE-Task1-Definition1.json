@@ -2,7 +2,7 @@
     "executionRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
     "containerDefinitions": [
       {
-        "name": "Receipts-Container2-Deploy",
+        "name": "ReceiptsBE-Task1-Container1",
         "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo",
         "essential": true,
         "portMappings": [
@@ -18,5 +18,5 @@
     "networkMode": "awsvpc",
     "cpu": "4096",
     "memory": "8192",
-    "family": "ReceiptsBE-task1-Deploy"
+    "family": "ReceiptsBE-Task1-Definition1"
   }
