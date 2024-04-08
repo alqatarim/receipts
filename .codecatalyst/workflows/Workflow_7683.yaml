@@ -10,7 +10,9 @@ SchemaVersion: "1.0"
 Triggers:
   - Type: PUSH
     Branches:
-      - aws-workflow-Branch
+      - main
+    FilesChanged:
+      - receipts/coddddtxt
 
 Actions:
   BuildDocker:
