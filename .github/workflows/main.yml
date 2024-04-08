@@ -1,0 +1,22 @@
+name: Auto Merge Main to AWS Workflow Branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Merge main into aws-workflow-branch
+        run: |
+          git config --global user.email "m.r.alqatari@gmail.com"
+          git config --global user.name "alqatarim"
+          git checkout origin aws-workflow-branch
+          git merge --no-ff origin main -m "Merge main into aws-workflow-branch"
+          git push origin aws-workflow-branch
