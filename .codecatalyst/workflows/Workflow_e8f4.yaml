@@ -1,4 +1,4 @@
-Name: Workflow_e8f4
+Name: Workflow_WK_Build_Run_Deploy
 Compute:
   Type: EC2
   Fleet: Linux.Arm64.Large
