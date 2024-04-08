@@ -16,7 +16,7 @@ Triggers:
 # Required - Define action configurations.
 Actions:
   BuildDocker:
-    # Identifies the action. Do not modify this value.
+    # Identifies the action. Do not modify this value. f
     Identifier: aws/build@v1.0.0
     Outputs:
       # Optional; Automatically discover reports for popular test frameworks
