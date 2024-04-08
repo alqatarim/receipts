@@ -9,7 +9,9 @@ SchemaVersion: "1.0"
 Triggers:
   - Type: Push
     Branches:
-      - aws-workflow-Branch
+      - main
+    FilesChanged:
+      - receipts/codeCatalystTrigger.txt
 
 # Required - Define action configurations.
 Actions:
