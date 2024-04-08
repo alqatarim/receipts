@@ -76,7 +76,7 @@ Actions:
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
-          Value: "0.17"
+          Value: "0.18"
         # Value: ${WorkflowSource.CommitId}
         - Name: ECS_SERVICE
           Value: ReceiptsBE-Cluster-Service1-Deployment
