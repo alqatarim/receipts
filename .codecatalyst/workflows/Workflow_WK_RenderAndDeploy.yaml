@@ -1,0 +1,60 @@
+Name: Workflow_WK_RenderAndDeploy
+Compute:
+  Type: EC2
+  Fleet: Linux.Arm64.Large
+  SharedInstance: true
+SchemaVersion: "1.0"
+
+# Optional - Set automatic triggers.
+Triggers:
+  - Type: Push
+    Branches:
+      - aws-workflow-Branch
+    FilesChanged:
+      - Receipts/aws-workddddd.txt
+
+# Required - Define action configurations.
+Actions:
+
+  RenderAmazonECSTaskDefinition:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/ecs-render-task-definition@v1.0.4
+    # Defines the action's properties.
+    Configuration:
+      image: $AWS_ACCOUNT_ID.dkr.ecr.BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+      container-name: $CONTAINER_NAME
+      task-definition: ${WorkflowSource.ECS_TASK_DEFINITION}
+    Timeout: 10 # ${ECS_TASK_DEFINITION}
+    Outputs:
+      Artifacts:
+        - Name: TaskDefArtifact
+          Files:
+            - task-definition*
+      Variables:
+        - task-definition
+    Inputs:
+      Sources:
+        - WorkflowSource
+
+  DeployToAmazonECS_4c:
+    Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
+    Configuration:
+      force-new-deployment: "1"
+      task-definition: ${RenderAmazonECSTaskDefinition.task-definition}
+      service: ${RenderAmazonECSTaskDefinition.ECS_SERVICE}
+      cluster: ${RenderAmazonECSTaskDefinition.ECS_CLUSTER}
+      region: ${RenderAmazonECSTaskDefinition.DEPLOY_AWS_REGION}
+    Timeout: 10
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystDevRole
+          Name: "692889134364"
+      Name: test
+    DependsOn:
+      - RenderAmazonECSTaskDefinition
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - TaskDefArtifact
+      Sources: []
