@@ -2,7 +2,7 @@ var express = require('express');
 var cors = require('cors'); // Import the 'cors' package
 var app = express();
 
-var PORT = process.env.PORT || 5002;
+var PORT = process.env.PORT || 80;
 // Enable CORS for all origins and headers
 app.use(cors());
 
