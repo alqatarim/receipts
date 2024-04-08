@@ -36,6 +36,26 @@ Actions:
     Inputs:
       Sources:
         - WorkflowSource
+      Variables:
+        - Name: BUILD_AWS_REGION
+          Value: me-south-1
+        - Name: DEPLOY_AWS_REGION
+          Value: me-south-1
+        - Name: ECR_REPOSITORY
+          Value: receipts-ecr-repo
+        - Name: IMAGE_TAG
+          Value: "0.15"
+    # Value: ${WorkflowSource.CommitId}
+        - Name: ECS_SERVICE
+          Value: ReceiptsBE-Cluster-Service1-Deployment
+        - Name: ECS_CLUSTER
+          Value: ReceiptsCluster
+        - Name: ECS_TASK_DEFINITION
+          Value: ReceiptsBE-Task1-Definition1.json
+        - Name: CONTAINER_NAME
+          Value: ReceiptsBE-Task1-Container1
+        - Name: AWS_ACCOUNT_ID
+          Value: "692889134364"
 
   DeployToAmazonECS_4c:
     Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
