@@ -30,8 +30,9 @@ Actions:
         - Name: TaskDefArtifact
           Files:
             - task-definition*
-      Variables:
-        - task-definition
+        - Name: WFsource
+          Files:
+            - "*/**"
     Inputs:
       Sources:
         - WorkflowSource
