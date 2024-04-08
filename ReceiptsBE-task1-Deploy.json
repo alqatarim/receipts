@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "Receipts-Container2-Deploy",
-        "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo:latest",
+        "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo",
         "essential": true,
         "portMappings": [
           {
@@ -18,5 +18,5 @@
     "networkMode": "awsvpc",
     "cpu": "4096",
     "memory": "8192",
-    "family": "Receipts-task2-Deploy"
+    "family": "ReceiptsBE-task1-Deploy"
   }
