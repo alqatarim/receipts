@@ -83,7 +83,7 @@ Actions:
         - Name: ECS_CLUSTER
           Value: ReceiptsCluster
         - Name: ECS_TASK_DEFINITION
-          Value: ReceiptsBE-Task1-Definition.json
+          Value: ReceiptsBE-Task1-Definition1.json
         - Name: CONTAINER_NAME
           Value: ReceiptsBE-Task1-Container1
         - Name: AWS_ACCOUNT_ID
