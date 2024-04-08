@@ -2,19 +2,15 @@ Name: Workflow_Build_Run_Deploy
 RunMode: QUEUED
 Compute:
   Type: EC2
-  Fleet: Receipts-Provisioned-Fleet
+  Fleet: Linux.Arm64.Large
   SharedInstance: true
 SchemaVersion: "1.0"
 
 # Optional - Set automatic triggers.
 Triggers:
-  - Type: PULLREQUEST
+  - Type: PUSH
     Branches:
-      - main
-    Events:
-      - CLOSED
-    FilesChanged:
-      - Receipts/aws-workflow-trigger.txt
+      - aws-workflow-Branch
 
 Actions:
   BuildDocker:
