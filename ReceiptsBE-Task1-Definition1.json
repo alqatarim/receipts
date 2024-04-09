@@ -5,8 +5,8 @@
             "name": "ReceiptsBE-Task1-Container1",
             "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo",
             "cpu": 2048,
-            "memory": 4096,
-            "memoryReservation": 4096,
+            "memory": 2048,
+            "memoryReservation": 2048,
             "portMappings": [
                 {
                     "name": "receiptsfrontend1-container1-port",
@@ -108,8 +108,8 @@
     "requiresCompatibilities": [
         "FARGATE"
     ],
-    "cpu": "4096",
-    "memory": "8192",
+    "cpu": "2048",
+    "memory": "4096",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
