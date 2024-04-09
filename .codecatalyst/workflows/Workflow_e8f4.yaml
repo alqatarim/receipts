@@ -1,7 +1,7 @@
 Name: Workflow_Build_Run_Deploy
 Compute:
   Type: EC2
-  Fleet: Provisioned-fleet-1
+  Fleet: Linux.x86-64.XLarge
   SharedInstance: true
 SchemaVersion: "1.0"
 
@@ -76,7 +76,7 @@ Actions:
         - Name: ECR_REPOSITORY
           Value: receipts-ecr-repo
         - Name: IMAGE_TAG
-          Value: "0.18"
+          Value: "0.19"
         # Value: ${WorkflowSource.CommitId}
         - Name: ECS_SERVICE
           Value: ReceiptsBE-Cluster-Service1-Deployment
