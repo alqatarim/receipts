@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 
-const app = express();
-const PORT = process.env.PORT || 5001;
+// var PORT = process.env.PORT || 5001;
+var PORT = 80;
 
 // Enable CORS for all origins and headers
 app.use(cors());
