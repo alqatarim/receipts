@@ -10,8 +10,8 @@
             "portMappings": [
                 {
                     "name": "receiptsfrontend1-container1-port",
-                    "containerPort": 80,
-                    "hostPort": 80,
+                    "containerPort": 5001,
+                    "hostPort": 5001,
                     "protocol": "tcp",
                     "appProtocol": "http"
                 }
@@ -62,9 +62,7 @@
     "taskRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
     "executionRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
     "networkMode": "awsvpc",
-    "revision": 10,
     "volumes": [],
-    "status": "ACTIVE",
     "requiresAttributes": [
         {
             "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
@@ -108,13 +106,12 @@
     "requiresCompatibilities": [
         "FARGATE"
     ],
-    "cpu": "4096",
-    "memory": "8192",
+    "cpu": "2048",
+    "memory": "4096",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-04-08T09:45:00.889Z",
-    "registeredBy": "arn:aws:iam::692889134364:root",
+
     "tags": []
 }
