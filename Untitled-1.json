@@ -1,9 +1,9 @@
 {
     "family": "ReceiptsBE-Task1-Definition1",
- "containerDefinitions": [
+    "containerDefinitions": [
         {
             "name": "ReceiptsBE-Task1-Container1",
-           "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo",
+            "image": "692889134364.dkr.ecr.me-south-1.amazonaws.com/receipts-ecr-repo",
             "cpu": 2048,
             "memory": 4096,
             "memoryReservation": 4096,
@@ -60,7 +60,6 @@
     "taskRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
     "executionRoleArn": "arn:aws:iam::692889134364:role/service-role/CodeCatalystDevRole",
     "networkMode": "awsvpc",
-    
     "requiresCompatibilities": [
         "FARGATE"
     ],
