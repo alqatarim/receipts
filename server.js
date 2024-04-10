@@ -4,6 +4,12 @@ var app = express();
 
 // var PORT = process.env.PORT || 5001;
 var PORT = 8081;
+
+// Define the hostname or domain to listen on
+const HOSTNAME = 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com';
+
+
+
 // Enable CORS for all origins and headers
 app.use(cors());
 
@@ -20,6 +26,6 @@ app.get('/api/receipts', (_, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, HOSTNAME, () => {
+  console.log(`Server is running on http://${HOSTNAME}:${PORT}`);
 });
