@@ -5,12 +5,7 @@ import cors from 'cors';
 var PORT = 8081;
 
 // Define the hostname or domain to listen on
-const HOSTNAME = 'receiptsloadbalancer-1009143669.me-south-1.elb.amazonaws.com';
-
-// Start the server
-app.listen(PORT, HOSTNAME, () => {
-  console.log(`Server is running on http://${HOSTNAME}:${PORT}`);
-});
+const HOSTNAME = 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com';
 
 // Enable CORS for all origins and headers
 app.use(cors());
@@ -22,6 +17,15 @@ const receiptDetails = [
   // Add more sample receipts here as needed
 ];
 
+// Start the server
+app.listen(PORT, HOSTNAME, () => {
+  console.log(`Server is running on http://${HOSTNAME}:${PORT}`);
+});
+
+
+
+
+
 // API endpoint to fetch customer receipts
 app.get('/api/receipts', (_, res) => {
 
@@ -32,9 +36,4 @@ app.get('/api/receipts', (_, res) => {
  //   res.status(500).send(err)
  // }
   
-});
-
-// Start the server
-app.listen(PORT, HOSTNAME, () => {
-  console.log(`Server is running on http://${HOSTNAME}:${PORT}`);
 });

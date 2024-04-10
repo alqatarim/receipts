@@ -20,12 +20,15 @@ const receiptDetails = [
   // Add more sample receipts here as needed
 ];
 
-// API endpoint to fetch customer receipts
-app.get('/api/receipts', (_, res) => {
-  res.json(receiptDetails);
-});
 
 // Start the server
 app.listen(PORT, HOSTNAME, () => {
   console.log(`Server is running on http://${HOSTNAME}:${PORT}`);
 });
+
+// API endpoint to fetch customer receipts
+app.get('/api/receipts', (_, res) => {
+  res.json(receiptDetails);
+});
+
+
