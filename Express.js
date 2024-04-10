@@ -5,7 +5,9 @@ import cors from 'cors';
 var PORT = 8081;
 
 // Define the hostname or domain to listen on
+
 const HOSTNAME = 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com';
+
 
 // Enable CORS for all origins and headers
 app.use(cors());
@@ -37,3 +39,4 @@ app.get('/api/receipts', (_, res) => {
  // }
   
 });
+

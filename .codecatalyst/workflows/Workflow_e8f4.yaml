@@ -1,0 +1,128 @@
+Name: Workflow_Build_Run_Deploy
+Compute:
+  Type: EC2
+  Fleet: Linux.x86-64.XLarge
+  SharedInstance: true
+SchemaVersion: "1.0"
+##
+# Optional - Set automatic triggers.
+Triggers:
+  - Type: Push
+    Branches:
+      - aws-workflow-Branch
+
+# Required - Define action configurations.
+Actions:
+  BuildDocker:
+    # Identifies the action. Do not modify this value. f
+    Identifier: aws/build@v1.0.0
+    Outputs:
+      # Optional; Automatically discover reports for popular test frameworks
+      AutoDiscoverReports:
+        Enabled: false
+        # Use as prefix for the report files
+        ReportNamePrefix: rpt
+      Variables:
+        - IMAGE
+        - BUILD_AWS_REGION
+        - DEPLOY_AWS_REGION
+        - ECR_REPOSITORY
+        - IMAGE_TAG
+        - ECS_SERVICE
+        - ECS_CLUSTER
+        - ECS_TASK_DEFINITION
+        - CONTAINER_NAME
+        - AWS_ACCOUNT_ID
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: echo Logging in to ECR
+        - Run: aws ecr get-login-password --region $BUILD_AWS_REGION | docker login
+            --username AWS --password-stdin
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com
+        - Run: echo Docker Pulling Image ...
+        - Run: docker pull
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            || true
+        #    - Run: echo Building and Pushing Docker Image ...
+        - Run: echo Building Docker Image ...
+        - Run: docker build --cache-from
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            --tag
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            .
+        - Run: docker push
+            $AWS_ACCOUNT_ID.dkr.ecr.$BUILD_AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+        - Run: echo DONE BUILD YAAAY!! ...
+      Container:
+        Registry: CODECATALYST
+        Image: CodeCatalystLinux_x86_64:2024_03
+    Environment:
+      Connections:
+        - Role: CodeCatalystDevRole
+          Name: "692889134364"
+      Name: test
+    Inputs:
+      Sources:
+        - WorkflowSource
+      Variables:
+        - Name: BUILD_AWS_REGION
+          Value: me-south-1
+        - Name: DEPLOY_AWS_REGION
+          Value: me-south-1
+        - Name: ECR_REPOSITORY
+          Value: receipts-ecr-repo
+        - Name: IMAGE_TAG
+          Value: ${WorkflowSource.CommitId}
+        # Value: ${WorkflowSource.CommitId}
+        - Name: ECS_SERVICE
+          Value: ReceiptsBE-Cluster-Service1-Deployment
+        - Name: ECS_CLUSTER
+          Value: ReceiptsCluster
+        - Name: ECS_TASK_DEFINITION
+          Value: ReceiptsBE-Task1-Definition1.json
+        - Name: CONTAINER_NAME
+          Value: ReceiptsBE-Task1-Container1
+        - Name: AWS_ACCOUNT_ID
+          Value: "692889134364"
+    Timeout: 10 #   - Run: aws ecs describe-task-definition --task-definition Receipts-task1-Deploy --query taskDefinition
+  RenderAmazonECSTaskDefinition_5c:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/ecs-render-task-definition@v1.0.4
+    # Defines the action's properties.
+    Configuration:
+      image: ${BuildDocker.AWS_ACCOUNT_ID}.dkr.ecr.${BuildDocker.BUILD_AWS_REGION}.amazonaws.com/${BuildDocker.ECR_REPOSITORY}:${BuildDocker.IMAGE_TAG}
+      container-name: ${BuildDocker.CONTAINER_NAME}
+      task-definition: ${BuildDocker.ECS_TASK_DEFINITION}
+    Timeout: 10
+    Outputs:
+      Artifacts:
+        - Name: TaskDefArtifact
+          Files:
+            - task-definition*
+    DependsOn:
+      - BuildDocker
+
+  DeployToAmazonECS_4c:
+    Identifier: aws/ecs-deploy@v1.0.5 # Defines the action's properties.
+    Configuration:
+      force-new-deployment: "1"
+      task-definition: ${RenderAmazonECSTaskDefinition_5c.task-definition}
+      service: ${BuildDocker.ECS_SERVICE}
+      cluster: ${BuildDocker.ECS_CLUSTER}
+      region: ${BuildDocker.DEPLOY_AWS_REGION}
+    Timeout: 15
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystDevRole
+          Name: "692889134364"
+      Name: test
+    DependsOn:
+      - RenderAmazonECSTaskDefinition_5c
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - TaskDefArtifact
+      Sources: []

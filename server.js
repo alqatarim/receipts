@@ -6,8 +6,8 @@ var app = express();
 var PORT = 8081;
 
 // Define the hostname or domain to listen on
-const HOSTNAME = 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com';
 
+const HOSTNAME = 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com';
 
 
 // Enable CORS for all origins and headers
@@ -30,5 +30,4 @@ app.listen(PORT, HOSTNAME, () => {
 app.get('/api/receipts', (_, res) => {
   res.json(receiptDetails);
 });
-
 
