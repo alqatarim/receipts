@@ -6,7 +6,9 @@ var app = express();
 var PORT = 8081;
 
 // Define the hostname or domain to listen on
-const HOSTNAME = 'receiptsloadbalancer-1009143669.me-south-1.elb.amazonaws.com';
+
+const HOSTNAME = 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com';
+
 
 // Enable CORS for all origins and headers
 app.use(cors());
@@ -18,12 +20,14 @@ const receiptDetails = [
   // Add more sample receipts here as needed
 ];
 
-// API endpoint to fetch customer receipts
-app.get('/api/receipts', (_, res) => {
-  res.json(receiptDetails);
-});
 
 // Start the server
 app.listen(PORT, HOSTNAME, () => {
   console.log(`Server is running on http://${HOSTNAME}:${PORT}`);
 });
+
+// API endpoint to fetch customer receipts
+app.get('/api/receipts', (_, res) => {
+  res.json(receiptDetails);
+});
+
