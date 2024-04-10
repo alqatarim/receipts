@@ -10,8 +10,6 @@ Triggers:
   - Type: Push
     Branches:
       - aws-workflow-Branch
-    FilesChanged:
-      - receipts/codeCatalystTrigger.txt
 
 # Required - Define action configurations.
 Actions:
