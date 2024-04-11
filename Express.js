@@ -19,11 +19,16 @@ const receiptDetails = [
   // Add more sample receipts here as needed
 ];
 
-// Start the server
-app.listen(PORT, HOSTNAME, () => {
-  console.log(`Server is running on http://${HOSTNAME}:${PORT}`);
-});
 
+app.set('port', process.env.PORT || 8081);
+app.set('host', process.env.HOST || 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com');
+
+
+
+// Start the server
+app.listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('host') + ':' + app.get('port'));
+});
 
 
 
