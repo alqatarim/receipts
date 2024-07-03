@@ -1,35 +1,39 @@
-var express = require('express');
-var cors = require('cors'); // Import the 'cors' package
-var app = express();
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const app = express();
+var cors = require('cors');
+const { connectToDb } = require('./db/mongooseConnection.js');
 
-// var PORT = process.env.PORT || 5001;
+const receiptsListRoutes = require('./routes/receiptsListRoutes.js');
+const uri = "mongodb+srv://alqatarim:Ilovecheesecake%238240@receiptmongodbcluster.omw7pzr.mongodb.net/Receipts_db?retryWrites=true&w=majority&appName=ReceiptMongoDBCluster";
 
-
-// Define the hostname or domain to listen on
-
-
-// Enable CORS for all origins and headers
 app.use(cors());
 
-// Sample customer receipts data
-const receiptDetails = [
-  { id: 1, customerName: 'John Doe', amount: 100 },
-  { id: 2, customerName: 'Jane Smith', amount: 200 },
-  // Add more sample receipts here as needed
-];
-
-app.set('port', 8081);
-app.set('host', 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com');
+//app.use(express.urlencoded({ extended: true }));
 
 
-// Start the server
-app.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('host') + ':' + app.get('port'));
-});
+ app.use(express.json());
+ app.use('/api', receiptsListRoutes);
 
-// API endpoint to fetch customer receipts
-app.get('/api/receipts', (_, res) => {
-  res.json(receiptDetails);
-});
+ app.set('port', 8081);
+ // app.set('host', 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com');
+ app.set('host', 'localhost');
+
+ // Start the server
+ app.listen(app.get('port'), function(){
+   console.log('Server server listening on port ' + app.get('host') + ':' + app.get('port'));
+ 
+   mongoose
+   .connect(uri, { useNewUrlParser: true })
+   .then(() => {
+
+       console.log("Conneced to MongoDB Atlas!")
+   
+   })
+ 
+ 
+  });
 
 
+  

@@ -1,47 +1,46 @@
-import express from 'express';
-import cors from 'cors';
+const express = require('express');
+const app = express();
+var cors = require('cors');
+const { connectToDb } = require('./db/mongoDBconnection.js');
+const mongoose = require('mongoose');
+const Router = require('./db/routes/receiptsListRouter.js');
 
-// var PORT = process.env.PORT || 5001;
-var PORT = 8081;
+mongoose.set('strictQuery', false);
 
-// Define the hostname or domain to listen on
-
-const HOSTNAME = 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com';
-
-
-// Enable CORS for all origins and headers
 app.use(cors());
-
-// Sample customer receipts data
-const receiptDetails = [
-  { id: 1, customerName: 'John Doe', amount: 100 },
-  { id: 2, customerName: 'Jane Smith', amount: 200 },
-  // Add more sample receipts here as needed
-];
-
-
-app.set('port', process.env.PORT || 8081);
-app.set('host', process.env.HOST || 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com');
-
-
-
-// Start the server
-app.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('host') + ':' + app.get('port'));
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 
 
-// API endpoint to fetch customer receipts
-app.get('/api/receipts', (_, res) => {
-
- // try {
-    // fetch data
-    res.json(receiptDetails);
- // } catch (err) {
- //   res.status(500).send(err)
- // }
   
-});
+
+  // Inserting a document
+  //const doc = await collection.insertOne(data);
+  //console.log("Inserted document with _id:", doc.insertedId);
+
+  app.set('port', 8081);
+  // app.set('host', 'ReceiptsLoadBalancer-1009143669.me-south-1.elb.amazonaws.com');
+  app.set('host', 'localhost');
+
+  // Start the server
+  app.listen(app.get('port'), function(){
+    console.log('Server server listening on port ' + app.get('host') + ':' + app.get('port'));
+  });
+
+  // API endpoint to fetch customer receipts
+  app.get('/api/receipts', (_, response) => {
+    connectToDb(async (db) => {
+     const receiptDetails = await db.collection('Receipts_List').find({ customer_id: { $gte: 1, $lte: 10 } }).toArray(); 
+    
+    if (receiptDetails) {
+      return response.status(200).json(receiptDetails);
+    }
+
+    //return express.response.status(404).json({ message: 'No receipts found' });
+    log('No receipts found');
+  }, response);
+  });
+
 
